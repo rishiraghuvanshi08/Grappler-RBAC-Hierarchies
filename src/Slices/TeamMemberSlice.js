@@ -46,11 +46,9 @@ export const addTeamMemberData = (teamId, userId) =>{
     return async(dispatch, getState) =>{
         try {
             await axios.post(`http://localhost:8043/team-members/${teamId}/add-new-member/${userId}`);
-            // const {users}  = useSelector((state) => state.userList);
-            // console.log("users", users);
-            // const store = getState().userList;
-            // console.log("HERE I AM USING ",store);
-            dispatch(addingTeamMember());
+            const store = getState().userList;
+            console.log("HERE I AM USING ",store);
+            dispatch(addingTeamMember({store, userId}));
           } catch (error) {
             if (error.response) {
                 // const status = error.response.status;
@@ -89,12 +87,9 @@ const teamSlice = createSlice({
             };
         },
         addingTeamMember : (state, action) =>{
-            const store = store.getState();
-            console.log("ADDING TEAM MEMBER", store.userList);
-            console.log("Inside Reducer", action)
-            // state.users = action.payload;
+            const updatedItems = action.payload.store.users.filter((item) => item.id == action.payload.userId);
             let teamMember = [...state.teamMember];
-            teamMember.push(action.payload);
+            teamMember.push(updatedItems[0]);
             state.teamMember = teamMember;  
         },
         deletingTheTeamMember : (state, action) =>{
