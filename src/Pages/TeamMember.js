@@ -6,12 +6,14 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { getTeamMemberData, addTeamMemberData } from '../Slices/TeamMemberSlice';
+import { getUsersData } from '../Slices/UserSlices';
 const TeamMember = () => {
   const { teamMember } = useSelector((state) => state.teaMemberList);
   const {id} = useParams();
   const dispatch = useDispatch();
   useEffect(()=>{
     dispatch(getTeamMemberData(id));
+    dispatch(getUsersData());
   },[])
 
   const [uId, setuId] = useState();
