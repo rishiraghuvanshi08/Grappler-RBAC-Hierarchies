@@ -10,7 +10,7 @@ export const getTeamMemberData = (teamId) =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamMemberRequest());
-          const response = await axios.get(`http://localhost:8043/team-members/${teamId}`);
+          const response = await axios.get(`http://localhost:8080/team-members/${teamId}`);
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingTeamMemberSuccess(data));

@@ -9,7 +9,7 @@ export const getUsersData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingDataRequest());
-          const response = await axios.get('http://localhost:8043/users/');
+          const response = await axios.get('http://localhost:8080/users/');
           const data = response.data;
           //   console.log("data here", data);
           dispatch(fetchingDataSuccess(data));

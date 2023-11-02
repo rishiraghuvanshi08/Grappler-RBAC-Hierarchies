@@ -6,12 +6,14 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
+import { updateProjectData } from "../Slices/ProjectSlices";
 
 const Teams = () => {
     const { teams , isTeamsLoading, teamsError } = useSelector((state) => state.teamsList);
     console.log(teams);
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const [teamId, setTeamId] = useState("");
   const [show, setShow] = useState(false);
   const [view, setView] = useState(false);
   const handleClose = () => setShow(false);
@@ -21,15 +23,15 @@ const Teams = () => {
 //     dispatch(deleteProjectData(index));
 //   };
 
-//   const deleteTeam = (index) => {
-//     dispatch(deleteProjectTeamData(index));
-//   };
+  const deleteTeam = (teamId) => {
+    dispatch(deleteTeamData(teamId));
+  };
 
-//   const updateProject = (id, name,) => {
-//     console.log(name)
-//     dispatch(updateProjectData(id, name));
-//     handleClose();
-//   }
+  const updateProject = (name) => {
+    console.log("update team details ",name,teamId)
+    dispatch(updateTeamData(teamId, name));
+    handleClose();
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,9 +40,8 @@ const Teams = () => {
   const handleButtonClick = (item) => {
     
     setName(item.name);
-    // setTeams(item.team);
-    // setProjectId(item.id);
-    setShow(true);
+    setTeamId(item.id);
+     setShow(true);
   };
   const teamMember = (IdTeam) =>{
     navigate(`/teams/${IdTeam}/teamDetails`)
@@ -80,7 +81,7 @@ const Teams = () => {
                 <th>
                   <button
                     className="tableButton"
-                    // onClick={() => deleteProject(item.id)}
+                     onClick={() => deleteTeam(item.id)}
                   >
                     Delete
                   </button>
@@ -104,14 +105,14 @@ const Teams = () => {
                   placeholder="Enter Name"
                   defaultValue={name || ""}
                   onChange={(e) => setName(e.target.value)}
+                  required
                 />
               </Form.Group>
               <Button
                 variant="primary"
                 type="submit"
                 style={{ margin: "20px" }}
-                // onClick={() => updateProject(projectId, name)}
-                // onClick={handleClose}
+                 onClick={() => updateProject(name)}
               >
                 Save Changes
               </Button>

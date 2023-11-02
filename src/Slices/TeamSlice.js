@@ -9,7 +9,7 @@ export const getTeamData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamRequest());
-          const response = await axios.get('http://localhost:8043/teams/');
+          const response = await axios.get('http://localhost:8080/teams/');
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingTeamSuccess(data));
@@ -18,12 +18,12 @@ export const getTeamData = () =>{
         }
     }
 }
-export const deleteTeamData = (index) =>{
+export const deleteTeamData = (teamId) =>{
     return async(dispatch) =>{
         try {
-            const response = await axios.delete(`http://localhost:8043/projects/${index}`);
+            const response = await axios.delete(`http://localhost:8043/projects/${teamId}`);
             console.log('Resource deleted successfully.', response.data);
-            dispatch(deletingTheTeam(index))
+            dispatch(deletingTheTeam(teamId))
         } catch (error) {
             console.log('Error deleting resource: ' + error.message);
         }
@@ -33,7 +33,7 @@ export const updateTeamData = (id, name) =>{
     return async(dispatch) =>{
         try {
             let details = { name };
-            const response = await axios.put(`http://localhost:8043/projects/${id}`, details);
+            const response = await axios.put(`http://localhost:8080/teams/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingTeam({ id: id, details: details }));
           } catch (error) {
@@ -105,9 +105,8 @@ const teamSlice = createSlice({
             }
         },
         updatingTeam : (state, action) =>{
-            // console.log("hello", action.payload);
-            const updatedItems = state.teams.map((item) => item.id === action.payload.id ? { ...item, ...action.payload.details } : item);
-            // console.log("hello", updatedItems);
+            const updatedItems = state.teams.map((item) => item.id === action.payload.id ?
+                                                { ...item, ...action.payload.details } : item);
             return {
                 ...state,
                 teams: updatedItems,

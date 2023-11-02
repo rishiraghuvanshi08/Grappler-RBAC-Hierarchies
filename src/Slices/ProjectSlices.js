@@ -9,7 +9,7 @@ export const getProjectData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingDataRequest());
-          const response = await axios.get('http://localhost:8043/projects/');
+          const response = await axios.get('http://localhost:8080/projects/');
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingDataSuccess(data));
@@ -44,7 +44,7 @@ export const updateProjectData = (id, name) =>{
     return async(dispatch) =>{
         try {
             let details = { name };
-            const response = await axios.put(`http://localhost:8043/projects/${id}`, details);
+            const response = await axios.put(`http://localhost:8080/projects/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingProject({ id: id, details: details }));
           } catch (error) {
