@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
+import { notify } from "../Components/Toastify";
+import Swal from "sweetalert2";
 const initialState = {
     users: [],
     isLoading: false,
@@ -24,31 +26,32 @@ export const deleteUserData = (index) =>{
         try {
             const response = await axios.delete(`http://localhost:8043/users/${index}`);
             dispatch(deletingTheUser(index))
+            Swal.fire(
+                'Deleted!',
+                'Your User has been deleted.',
+                'success'
+            )
             console.log('Resource deleted successfully.', response.data);
         } catch (error) {
+            if (error.response) {
+                notify(error.response.data.message);
+            }
             console.log('Error deleting resource: ' + error.message);
         }
     }
 }
 export const addUserData = (user) =>{
-    console.log( user)
     return async(dispatch) =>{
         try {
-            await axios.post('http://localhost:8043/users/', user);
-            dispatch(addingUser(user));
-          } catch (error) {
+            const response = await axios.post('http://localhost:8043/users/', user);
+            dispatch(addingUser(response.data.data));
+            notify(response.data.message);
+        } catch (error) {
             if (error.response) {
-                const status = error.response.status;
-                if (status === 409) {
-                  alert(error.response.data.message);
-                } else if (status === 500) {
-                  alert(error.response.data.message);
-                } else{
-                  alert(error.response.data.message);
-                }
+                notify(error.response.data.message);
             }
             console.error('Error storing data:', error);
-          }
+        }
     }
 }
 export const updateUserData = (id, name, email, designation) =>{
@@ -56,9 +59,13 @@ export const updateUserData = (id, name, email, designation) =>{
         try {
             let details = { name, email, designation };
             const response = await axios.put(`http://localhost:8043/users/${id}`, details);
-            console.log('Resource updated successfully.', response.data);
+            // console.log('Resource updated successfully.', response.data);
             dispatch(updatingUser({ id: id, details: details }));
+            notify(response.data.message);
           } catch (error) {
+            if (error.response) {
+                notify(error.response.data.message);
+            }
             console.log('Error updating resource: ' + error.message);
           }
     }
@@ -69,28 +76,18 @@ const userSlice = createSlice({
     initialState,
     reducers : {
         fetchingDataRequest : (state) =>{
-            return {
-                ...state,
-                isLoading: true,
-                error: null,
-            };
+            state.isLoading =  true;
+            state.error = null;
         },
         fetchingDataSuccess : (state, action) =>{
-            // console.log("DATA SUCCESS", action.payload);
-            return {
-                ...state,
-                users : action.payload,
-                isLoading: false,
-                error: null,
-            };
+            state.users = action.payload;
+            state.isLoading =  false;
+            state.error = null;
         },
         fetchingDataFailure : (state, action) =>{
-            return {
-                ...state,
-                users: [],
-                isLoading: false,
-                error: action.payload,
-            };
+            state.users = [];
+            state.isLoading =  false;
+            state.error = null;
         },
         addingUser : (state, action) =>{
             console.log("Inside Reducer", action)
@@ -102,20 +99,10 @@ const userSlice = createSlice({
         deletingTheUser : (state, action) =>{
             const updatedItems = state.users.filter((item, index) => item.id !== action.payload);
             state.users = updatedItems;
-            // console.log("hello", updatedItems);
-            // return {
-            //     ...state,
-            //     users: updatedItems,
-            // }
         },
         updatingUser : (state, action) =>{
-            console.log("hello", action.payload);
             const updatedItems = state.users.map((item) => item.id === action.payload.id ? { ...item, ...action.payload.details } : item);
-            console.log("hello", updatedItems);
-            return {
-                ...state,
-                users: updatedItems,
-            };
+            state.users = updatedItems;
         }
     }
 })

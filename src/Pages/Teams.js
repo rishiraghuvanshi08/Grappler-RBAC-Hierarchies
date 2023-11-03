@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { useSelector, useDispatch } from "react-redux";
-import { getTeamData, deleteTeamData, updateTeamData} from "../Slices/TeamSlice";
+import { getTeamData} from "../Slices/TeamSlice";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";

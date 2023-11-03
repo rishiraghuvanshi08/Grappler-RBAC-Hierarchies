@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import {Form} from "react-bootstrap";
 import Container from "react-bootstrap/esm/Container";
 import { useDispatch } from "react-redux";
-
+import { toast } from "react-toastify";
 const AddName = ({value, method, navigator}) => {
     // console.log(method);
     const navigate = useNavigate();

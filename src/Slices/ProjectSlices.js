@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
+import {notify} from "../Components/Toastify.js"
+import Swal from "sweetalert2";
 const initialState = {
     projects: [],
     isLoadingProject: false,
@@ -11,9 +13,12 @@ export const getProjectData = () =>{
           dispatch(fetchingDataRequest());
           const response = await axios.get('http://localhost:8043/projects/');
           const data = response.data;
-          console.log("data here", data);
+        //   console.log("data here", data);
           dispatch(fetchingDataSuccess(data));
         } catch (error) {
+            if (error.response) {
+                notify(error.response.data.message);
+            }
           dispatch(fetchingDataFailure(error));
         }
     }
@@ -24,7 +29,15 @@ export const deleteProjectData = (index) =>{
             const response = await axios.delete(`http://localhost:8043/projects/${index}`);
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheProject(index))
+            Swal.fire(
+                'Deleted!',
+                'Your Project has been deleted.',
+                'success'
+                )
         } catch (error) {
+            if (error.response) {
+               notify(error.response.data.message);
+            }
             console.log('Error deleting resource: ' + error.message);
         }
     }
@@ -36,6 +49,9 @@ export const deleteProjectTeamData = (index) =>{
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheProject(index))
         } catch (error) {
+            if (error.response) {
+                notify(error.response.data.message);
+             }
             console.log('Error deleting resource: ' + error.message);
         }
     }
@@ -47,7 +63,11 @@ export const updateProjectData = (id, name) =>{
             const response = await axios.put(`http://localhost:8043/projects/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingProject({ id: id, details: details }));
+            notify(response.data.message);
           } catch (error) {
+            if (error.response) {
+                notify(error.response.data.message);
+             }
             console.log('Error updating resource: ' + error.message);
           }
     }
@@ -57,21 +77,32 @@ export const addProjectData = (name) =>{
     return async(dispatch) =>{
         try {
             const response = await axios.post('http://localhost:8043/projects/', {name});
-            console.log("HERE RESPONSE", response.data.data);
-            dispatch(addingProject(name));
-          } catch (error) {
+            dispatch(addingProject(response.data.data));
+            notify(response.data.message);
+        } catch (error) {
             if (error.response) {
-                const status = error.response.status;
-                if (status === 409) {
-                  alert(error.response.data.message);
-                } else if (status === 500) {
-                  alert(error.response.data.message);
-                } else{
-                  alert(error.response.data.message);
-                }
+                const msg = error.response.data.message;
+                notify(msg);
             }
             console.error('Error storing data:', error);
-          }
+        }
+    }
+}
+export const addProjecTeamData = (projectId, teamId) =>{
+    // console.log( user)
+    return async(dispatch) =>{
+        try {
+            const response = await axios.post(`http://localhost:8043/projects/${projectId}/teams/${teamId}`);
+            // dispatch(addingProjectTeam(response.data.data));
+            console.log(response.data)
+            notify(response.data.message);
+        } catch (error) {
+            if (error.response) {
+                const msg = error.response.data.message;
+                notify(msg);
+            }
+            console.error('Error storing data:', error);
+        }
     }
 }
 const projectSlice = createSlice({
@@ -79,28 +110,18 @@ const projectSlice = createSlice({
     initialState,
     reducers : {
         fetchingDataRequest : (state) =>{
-            return {
-                ...state,
-                isLoading: true,
-                error: null,
-            };
+            state.isLoadingProject = true;
+            state.projectError = null;
         },
         fetchingDataSuccess : (state, action) =>{
-            console.log("DATA SUCCESS", action.payload);
-            return {
-                ...state,
-                projects : action.payload,
-                isLoading: false,
-                error: null,
-            };
+            state.projects = action.payload;
+            state.isLoadingProject = false;
+            state.projectError = null;
         },
         fetchingDataFailure : (state, action) =>{
-            return {
-                ...state,
-                projects: [],
-                isLoading: false,
-                error: action.payload,
-            };
+            state.projects = [];
+            state.isLoadingProject = false;
+            state.projectError = action.payload;
         },
         addingProject : (state, action) =>{
             let projects = [...state.projects];
@@ -109,24 +130,19 @@ const projectSlice = createSlice({
         },
         deletingTheProject : (state, action) =>{
             const updatedItems = state.projects.filter((item, index) => item.id !== action.payload);
-            return {
-                ...state,
-                projects: updatedItems,
-            }
+            state.projects = updatedItems;
         },
         updatingProject : (state, action) =>{
-            // console.log("hello", action.payload);
             const updatedItems = state.projects.map((item) => item.id === action.payload.id ? { ...item, ...action.payload.details } : item);
-            // console.log("hello", updatedItems);
-            return {
-                ...state,
-                projects: updatedItems,
-            };
+            state.projects = updatedItems;
+        },
+        addingProjectTeam: (state, action) =>{
+
         }
     }
 })
 export const {
-    fetchingDataRequest, fetchingDataSuccess, fetchingDataFailure, deletingTheProject, updatingProject, addingProject
+    fetchingDataRequest, fetchingDataSuccess, fetchingDataFailure, deletingTheProject, updatingProject, addingProject, addingProjectTeam
 } = projectSlice.actions;
 export default projectSlice.reducer;
   

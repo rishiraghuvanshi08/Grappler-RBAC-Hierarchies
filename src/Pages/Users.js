@@ -7,7 +7,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { updateUserData } from "../Slices/UserSlices";
-
+import Swal from "sweetalert2";
 
 const Users = () => {
     const {users, isLoading, error}  = useSelector((state) => state.userList);
@@ -26,10 +26,24 @@ const Users = () => {
   const dispatch = useDispatch();
   // console.log(users);
   const deleteUser = (index) => {
-    const shouldDelete = window.confirm("Are you sure you want to delete this item?");
-    if (shouldDelete) {
-      dispatch(deleteUserData(index));
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteUserData(index));
+        // Swal.fire(
+        //   'Deleted!',
+        //   'Your Project has been deleted.',
+        //   'success'
+        //   )
+        }
+      })
   };
 
   const updateUser = () => {

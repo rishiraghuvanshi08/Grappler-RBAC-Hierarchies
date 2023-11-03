@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { useSelector, useDispatch } from "react-redux";
-import { getProjectData, deleteProjectData, updateProjectData, deleteProjectTeamData} from "../Slices/ProjectSlices";
+import { getProjectData, deleteProjectData, updateProjectData, deleteProjectTeamData, addProjecTeamData} from "../Slices/ProjectSlices";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Project = () => {
   const { projects , isProjectLoading, projectError } = useSelector((state) => state.projectList);
+  console.log(projects);
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  // const [teamId, setTeamId] = useState("");
+  const [teamId, setTeamId] = useState("");
   const [projectInd, setProjectInd] = useState("");
   const [projectId, setProjectId] = useState(0);
+  const [teamField, setTeamField] = useState(false);
   const [show, setShow] = useState(false);
   const [view, setView] = useState(false);
   const handleClose = () => setShow(false);
@@ -21,11 +24,23 @@ const Project = () => {
   const dispatch = useDispatch();
   // console.log(users);
   const deleteProject = (index) => {
-    dispatch(deleteProjectData(index));
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteProjectData(index));
+        }
+      })
   };
 
   const deleteTeam = (index) => {
-    dispatch(deleteProjectTeamData(index));
+      dispatch(deleteProjectTeamData(index));
   };
 
   const updateProject = (id, name,) => {
@@ -45,15 +60,20 @@ const Project = () => {
     setProjectId(item.id);
     setShow(true);
   };
-  const handleTeamsClick = (teamsId, index) =>{
-    console.log(teamsId, index)
+  const handleTeamsClick = (prId, index) =>{
+    // console.log(teamsId, index)
     setView(true);
     setProjectInd(index);
-    setProjectId(teamsId);
+    setProjectId(prId);
     // console.log("Clicked")
   }
   const teamMember = (IdTeam, projectId) =>{
     navigate(`/teams/${IdTeam}/teamDetails`)
+  }
+
+  const saveTeam = (projectId, teamId) =>{
+    dispatch(addProjecTeamData(projectId, teamId))
+    setTeamField(!teamField);
   }
   useEffect(() => {
     // console.log("hello");
@@ -158,10 +178,20 @@ const Project = () => {
           </thead>
           </Table>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={closeHandle}>
+          <Modal.Footer style={{"display" : "block"}}>
+            {teamField?(<><Form><Form.Group className="mb-3" controlId="id">
+                <Form.Label>TeamId</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter TeamId"
+                  defaultValue={teamId || ""}
+                  onChange={(e) => setTeamId(e.target.value)}
+                />
+              </Form.Group><Button variant="secondary" onClick={()=>saveTeam(projectId, teamId)}>
+              SAVE 
+            </Button></Form></>):(<><Button variant="secondary" onClick={()=>setTeamField(!teamField)}>
               ADD TEAM 
-            </Button>
+            </Button></>)}
           </Modal.Footer>
         </Modal>
       </Table>

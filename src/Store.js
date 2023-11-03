@@ -1,4 +1,4 @@
-import {configureStore} from "@reduxjs/toolkit";
+import {configureStore } from "@reduxjs/toolkit";
 import UserSlices from "./Slices/UserSlices";
 import ProjectSlices from "./Slices/ProjectSlices";
 import HierachySlice from "./Slices/HierachySlice";
@@ -12,6 +12,6 @@ const store = configureStore({
         viewHierarchy : HierachySlice,
         teamsList : TeamSlice,
         teaMemberList : TeamMemberSlice,
-    }
+    },
 });
 export default store;
