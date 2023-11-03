@@ -18,17 +18,6 @@ export const getTeamData = () =>{
         }
     }
 }
-export const deleteTeamData = (teamId) =>{
-    return async(dispatch) =>{
-        try {
-            const response = await axios.delete(`http://localhost:8043/projects/${teamId}`);
-            console.log('Resource deleted successfully.', response.data);
-            dispatch(deletingTheTeam(teamId))
-        } catch (error) {
-            console.log('Error deleting resource: ' + error.message);
-        }
-    }
-}
 export const updateTeamData = (id, name) =>{
     return async(dispatch) =>{
         try {
@@ -41,12 +30,14 @@ export const updateTeamData = (id, name) =>{
           }
     }
 }
-export const addTeamData = (name) =>{
-    // console.log( user)
+export const addTeamData = (teamData) =>{
+     console.log( "Team data in add team ",teamData)
     return async(dispatch) =>{
         try {
-            await axios.post('http://localhost:8043/projects/', {name});
-            dispatch(addingTeam(name));
+            const response= await axios.post('http://localhost:8080/teams/', teamData);
+            console.log("add team ",response.data.data);
+            teamData.id=response.data.data
+            dispatch(addingTeam(teamData));
           } catch (error) {
             if (error.response) {
                 const status = error.response.status;
@@ -91,18 +82,10 @@ const teamSlice = createSlice({
             };
         },
         addingTeam : (state, action) =>{
-            console.log("Inside Reducer", action)
-            // state.users = action.payload;
+            console.log("Inside Reducer", action.payload)
             let teams = [...state.teams];
             teams.push(action.payload);
             state.teams = teams;  
-        },
-        deletingTheTeam : (state, action) =>{
-            const updatedItems = state.teams.filter((item, index) => item.id !== action.payload);
-            return {
-                ...state,
-                teams: updatedItems,
-            }
         },
         updatingTeam : (state, action) =>{
             const updatedItems = state.teams.map((item) => item.id === action.payload.id ?

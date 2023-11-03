@@ -14,6 +14,9 @@ export const getProjectData = () =>{
           console.log("data here", data);
           dispatch(fetchingDataSuccess(data));
         } catch (error) {
+            if (error.response) {
+                alert(error.response)
+             }
           dispatch(fetchingDataFailure(error));
         }
     }
@@ -25,6 +28,9 @@ export const deleteProjectData = (index) =>{
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheProject(index))
         } catch (error) {
+            if (error.response) {
+                alert(error.response)
+             }
             console.log('Error deleting resource: ' + error.message);
         }
     }
@@ -36,6 +42,9 @@ export const deleteProjectTeamData = (index) =>{
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheProject(index))
         } catch (error) {
+            if (error.response) {
+                alert(error.response)
+             }
             console.log('Error deleting resource: ' + error.message);
         }
     }
@@ -48,6 +57,9 @@ export const updateProjectData = (id, name) =>{
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingProject({ id: id, details: details }));
           } catch (error) {
+            if (error.response) {
+                alert(error.response)
+             }
             console.log('Error updating resource: ' + error.message);
           }
     }
@@ -56,19 +68,12 @@ export const addProjectData = (name) =>{
     // console.log( user)
     return async(dispatch) =>{
         try {
-            const response = await axios.post('http://localhost:8043/projects/', {name});
+            const response = await axios.post('http://localhost:8080/projects/', {name});
             console.log("HERE RESPONSE", response.data.data);
             dispatch(addingProject(name));
           } catch (error) {
             if (error.response) {
-                const status = error.response.status;
-                if (status === 409) {
-                  alert(error.response.data.message);
-                } else if (status === 500) {
-                  alert(error.response.data.message);
-                } else{
-                  alert(error.response.data.message);
-                }
+               alert(error.response)
             }
             console.error('Error storing data:', error);
           }

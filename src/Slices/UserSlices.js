@@ -11,7 +11,6 @@ export const getUsersData = () =>{
           dispatch(fetchingDataRequest());
           const response = await axios.get('http://localhost:8080/users/');
           const data = response.data;
-          //   console.log("data here", data);
           dispatch(fetchingDataSuccess(data));
           return data;
         } catch (error) {
@@ -22,7 +21,7 @@ export const getUsersData = () =>{
 export const deleteUserData = (index) =>{
     return async(dispatch) =>{
         try {
-            const response = await axios.delete(`http://localhost:8043/users/${index}`);
+            const response = await axios.delete(`http://localhost:8080/users/${index}`);
             dispatch(deletingTheUser(index))
             console.log('Resource deleted successfully.', response.data);
         } catch (error) {
@@ -34,8 +33,9 @@ export const addUserData = (user) =>{
     console.log( user)
     return async(dispatch) =>{
         try {
-            await axios.post('http://localhost:8043/users/', user);
-            dispatch(addingUser(user));
+            const response=await axios.post('http://localhost:8080/users/', user);
+            console.log("respinse",response.data);
+            dispatch(addingUser(response.data.data));
           } catch (error) {
             if (error.response) {
                 const status = error.response.status;
@@ -55,10 +55,14 @@ export const updateUserData = (id, name, email, designation) =>{
     return async(dispatch) =>{
         try {
             let details = { name, email, designation };
-            const response = await axios.put(`http://localhost:8043/users/${id}`, details);
+            const response = await axios.put(`http://localhost:8080/users/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingUser({ id: id, details: details }));
           } catch (error) {
+            if(error.response)
+            {
+                alert(error.response.data.message);
+            }
             console.log('Error updating resource: ' + error.message);
           }
     }

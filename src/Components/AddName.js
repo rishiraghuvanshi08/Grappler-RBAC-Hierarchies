@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {Form} from "react-bootstrap";
 import Container from "react-bootstrap/esm/Container";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const AddName = ({value, method, navigator}) => {
     // console.log(method);
+    const { projects} = useSelector((state) => state.projectList);
     const navigate = useNavigate();
   const dispatch = useDispatch();
   const [inputName, setInputName] = useState("");
@@ -17,10 +18,20 @@ const AddName = ({value, method, navigator}) => {
     addData(inputName);
   };
   const addData = (name) => {
+    console.log("projects", projects);
+  
+    // Check if the name already exists in the projects array
+    const nameExists = projects.some((project) => project.name === name);
+  
+    if (nameExists) {
+      alert("Project name already exists");
+      return;
+    }
+  
     navigate(`/${navigator}`);
-    // console.log(props.method);
     dispatch(method(name));
   };
+  
   return (
     <div className="formParent">
       <Container

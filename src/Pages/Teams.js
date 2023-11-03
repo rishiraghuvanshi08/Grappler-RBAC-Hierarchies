@@ -1,94 +1,127 @@
 import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { useSelector, useDispatch } from "react-redux";
-import { getTeamData, deleteTeamData, updateTeamData} from "../Slices/TeamSlice";
+import { getTeamData, deleteTeamData, updateTeamData, addTeamData } from "../Slices/TeamSlice";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { updateProjectData } from "../Slices/ProjectSlices";
+import {  getUsersData, deleteUserData } from "../Slices/UserSlices";
 
 const Teams = () => {
-    const { teams , isTeamsLoading, teamsError } = useSelector((state) => state.teamsList);
-    console.log(teams);
+  const { teams, isTeamsLoading, teamsError } = useSelector((state) => state.teamsList);
+  console.log(teams);
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [teamId, setTeamId] = useState("");
   const [show, setShow] = useState(false);
+  const [addShow, setAddShow] = useState(false);
   const [view, setView] = useState(false);
-  const handleClose = () => setShow(false);
-  const dispatch = useDispatch();
-  // console.log(users);
-//   const deleteProject = (index) => {
-//     dispatch(deleteProjectData(index));
-//   };
-
-  const deleteTeam = (teamId) => {
-    dispatch(deleteTeamData(teamId));
+  const [userIds, setUserIds] = useState([""]);
+  const [numUserIds, setNumUserIds] = useState(1);
+  const handleClose = () => {
+    setShow(false);
+    setAddShow(false);
+    setUserIds([""]);
   };
+  const dispatch = useDispatch();
 
-  const updateProject = (name) => {
-    console.log("update team details ",name,teamId)
+  const updateTeam = (name) => {
+    console.log("update team details ", name, teamId);
+    const teamNameExists = teams.some((team) => team.name === name);
+    if (teamNameExists) {
+      alert("Team with the same name already exists");
+    }
+    else{
     dispatch(updateTeamData(teamId, name));
     handleClose();
-  }
+    }
+  };
+
+  const addTeam = (name) => {
+    console.log("Add team details ", name, userIds);
+    console.log("team ", teams);
+  
+    const teamNameExists = teams.some((team) => team.name === name);
+    if (teamNameExists) {
+      alert("Team with the same name already exists");
+      return; 
+    }
+  
+    const teamData = {
+      id: '',
+      name: name,
+      teamMembers: userIds.map(userId => ({ user: { id: userId } }))
+    };
+    dispatch(addTeamData(teamData));
+    handleClose();
+  };
+  
+  
+  
+
+  const addUserIdField = () => {
+    setUserIds([...userIds, ""]);
+    setNumUserIds(numUserIds + 1);
+  };
+
+  const removeUserIdField = () => {
+    if (numUserIds > 1) {
+      setUserIds(userIds.slice(0, numUserIds - 1));
+      setNumUserIds(numUserIds - 1);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
   const handleButtonClick = (item) => {
-    
     setName(item.name);
     setTeamId(item.id);
-     setShow(true);
+    setShow(true);
   };
-  const teamMember = (IdTeam) =>{
-    navigate(`/teams/${IdTeam}/teamDetails`)
-  }
+
+  const handleAddButtonClick = (item) => {
+    setAddShow(true);
+  };
+
+  const teamMember = (IdTeam) => {
+    navigate(`/teams/${IdTeam}/teamDetails`);
+  };
+
   useEffect(() => {
-    // console.log("hello");
     dispatch(getTeamData());
-  },[dispatch]);
+  }, [dispatch]);
 
-//   if (isProjectLoading) {
-//     return <div>Loading...</div>;
-//   }
+  if (isTeamsLoading) {
+    return <div>Loading...</div>;
+  }
 
-//   if (projectError) {
-//     return <div>Error: {projectError.message}</div>;
-//   }
+  if (teamsError) {
+    return <div>Error: {teamsError.message}</div>;
+  }
+
   return (
     <div>
-    <>
       <Table striped bordered hover variant="success">
         <thead>
           <tr>
             <th>id</th>
             <th>Name</th>
             <th>Teams Members</th>
-            <th>Delete</th>
+            <th>View projects</th>
             <th>Edit</th>
           </tr>
           {teams !== undefined &&
             teams.map((item, index) => (
-              // <div>{item.name}</div>
-              // {item !== undefined}
               <tr key={index}>
                 <th>{item.id}</th>
                 <th>{item.name}</th>
-                <th><button className="tableButton"onClick={() => teamMember(item.id)}>View Teams</button></th>
-                <th>
-                  <button
-                    className="tableButton"
-                     onClick={() => deleteTeam(item.id)}
-                  >
-                    Delete
-                  </button>
-                </th>
-                <th>
-                  <button className="tableButton"onClick={() => handleButtonClick(item)}>Edit</button>
-                </th>
+                <th><button className="tableButton" onClick={() => teamMember(item.id)}>View Members</button></th>
+                <th><button className="tableButton" onClick={() => teamMember(item.id)}>View projects</button></th>
+                <th><button className="tableButton" onClick={() => handleButtonClick(item)}>Edit</button></th>
               </tr>
             ))}
         </thead>
@@ -112,7 +145,65 @@ const Teams = () => {
                 variant="primary"
                 type="submit"
                 style={{ margin: "20px" }}
-                 onClick={() => updateProject(name)}
+                onClick={() => updateTeam(name)}
+              >
+                Save Changes
+              </Button>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal show={addShow} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Team</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form style={{ width: "40%" }} onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="Name">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter New Team Name"
+                  defaultValue={""}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              {userIds.map((userId, index) => (
+                <Form.Group className="mb-3" controlId={`userId${index}`} key={index}>
+                  <Form.Label>User ID</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter User ID"
+                    defaultValue={userId}
+                    onChange={(e) => {
+                      const updatedUserIds = [...userIds];
+                      updatedUserIds[index] = e.target.value;
+                      setUserIds(updatedUserIds);
+                    }}
+                    required
+                  />
+                  {index === userIds.length - 1 && (
+                    <span onClick={addUserIdField} style={{ cursor: "pointer", marginLeft: "10px" }}>
+                      +
+                    </span>
+                  )}
+                  {index === 0 && userIds.length > 1 && (
+                    <span onClick={removeUserIdField} style={{ cursor: "pointer", marginLeft: "10px" }}>
+                      -
+                    </span>
+                  )}
+                </Form.Group>
+              ))}
+              <Button
+                variant="primary"
+                type="submit"
+                style={{ margin: "20px" }}
+                onClick={() => addTeam(name)}
               >
                 Save Changes
               </Button>
@@ -126,16 +217,15 @@ const Teams = () => {
         </Modal>
       </Table>
       <Button
-            variant="primary"
-            type="submit"
-            style={{ margin: "20px" }}
-            onClick={() => navigate('/teams/addTeam')}
-          >
-            ADD TEAM
-          </Button>
-    </>
-  </div>
-  )
-}
+        variant="primary"
+        type="submit"
+        style={{ margin: "20px" }}
+        onClick={handleAddButtonClick}
+      >
+        ADD TEAM
+      </Button>
+    </div>
+  );
+};
 
-export default Teams
+export default Teams;

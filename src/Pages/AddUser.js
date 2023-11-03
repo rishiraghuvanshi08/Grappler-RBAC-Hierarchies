@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {Form} from "react-bootstrap";
 import Container from "react-bootstrap/esm/Container";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUserData } from "../Slices/UserSlices";
 
 const AddUser = () => {
+  const {users}  = useSelector((state) => state.userList);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [inputName, setInputName] = useState("");
@@ -16,7 +17,6 @@ const AddUser = () => {
   const [designation, setDesignation] = useState("");
   const [reporting, setReporting] = useState("");
   const [role, setRole] = useState("");
-  // const [isInputEmpty, setIsInputEmpty] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     addUser(
@@ -29,8 +29,23 @@ const AddUser = () => {
     )
   };
   const addUser = (name, email, designation, password, reportingID, role) => {
+    console.log("users", users);
+  
+    const emailExists = users.some((user) => user.email === email);
+  
+    if (emailExists) {
+      alert("Email already exists");
+      return;
+    }
+  
+    const reportingUser = users.find((user) => user.id === reportingID);
+  
+    if (!reportingUser) {
+      alert("Reporting ID is not valid");
+      return;
+    }
     navigate('/users');
-    // console.log('Input Value:', name, " ", email, " ", dob);
+  
     let user = {
       name,
       email,
@@ -43,8 +58,10 @@ const AddUser = () => {
         role,
       },
     };
+  
     dispatch(addUserData(user));
   };
+  
   return (
     <div className="formParent">
       <Container
