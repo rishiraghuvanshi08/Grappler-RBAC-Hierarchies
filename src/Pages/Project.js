@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Project = () => {
-  const { projects , isProjectLoading, projectError } = useSelector((state) => state.projectList);
-  console.log(projects);
+  const { projects } = useSelector((state) => state.projectList);
+  console.log("Projects List in Main",projects);
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [teamId, setTeamId] = useState("");
@@ -68,7 +68,7 @@ const Project = () => {
     // console.log("Clicked")
   }
   const teamMember = (IdTeam, projectId) =>{
-    navigate(`/teams/${IdTeam}/teamDetails`)
+    navigate(`/admin/teams/${IdTeam}/teamDetails`)
   }
 
   const saveTeam = (projectId, teamId) =>{
@@ -80,13 +80,13 @@ const Project = () => {
     dispatch(getProjectData());
   },[dispatch]);
 
-  if (isProjectLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isProjectLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (projectError) {
-    return <div>Error: {projectError.message}</div>;
-  }
+  // if (projectError) {
+  //   return <div>Error: {projectError.message}</div>;
+  // }
   return (
     <div>
     <>
@@ -199,7 +199,7 @@ const Project = () => {
             variant="primary"
             type="submit"
             style={{ margin: "20px" }}
-            onClick={() => navigate('/projects/addProject')}
+            onClick={() => navigate('/admin/projects/addProject')}
           >
             ADD PROJECT
           </Button>

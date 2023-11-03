@@ -6,7 +6,6 @@ import {Form} from "react-bootstrap";
 import Container from "react-bootstrap/esm/Container";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-
 const AddName = ({value, method, navigator}) => {
     // console.log(method);
     const { projects} = useSelector((state) => state.projectList);
@@ -18,21 +17,21 @@ const AddName = ({value, method, navigator}) => {
     e.preventDefault();
     addData(inputName);
   };
-  const addData = (name) => {
+  const addData = (name1) => {
     console.log("projects", projects);
-  
+    const project = {
+      id: '',
+      name: name1
+    };
     // Check if the name already exists in the projects array
-    const nameExists = projects.some((project) => project.name === name);
-  
+    const nameExists = projects.some((project) => project.name === name1);
     if (nameExists) {
       alert("Project name already exists");
       return;
     }
-  
-    navigate(`/${navigator}`);
-    dispatch(method(name));
+    dispatch(method(project));
+    navigate("/admin/projects");
   };
-  
   return (
     <div className="formParent">
       <Container
@@ -55,7 +54,6 @@ const AddName = ({value, method, navigator}) => {
             type="submit"
             style={{ margin: "20px" }}
             // onClick={() =>
-              
             // }
           >
             {value}
@@ -65,5 +63,4 @@ const AddName = ({value, method, navigator}) => {
     </div>
   )
 }
-
 export default AddName

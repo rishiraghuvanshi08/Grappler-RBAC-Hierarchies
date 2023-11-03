@@ -11,7 +11,7 @@ export const getProjectData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingDataRequest());
-          const response = await axios.get('http://localhost:8043/projects/');
+          const response = await axios.get('http://localhost:8080/projects/');
           const data = response.data;
         //   console.log("data here", data);
           dispatch(fetchingDataSuccess(data));
@@ -26,7 +26,7 @@ export const getProjectData = () =>{
 export const deleteProjectData = (index) =>{
     return async(dispatch) =>{
         try {
-            const response = await axios.delete(`http://localhost:8043/projects/${index}`);
+            const response = await axios.delete(`http://localhost:8080/projects/${index}`);
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheProject(index))
             Swal.fire(
@@ -45,7 +45,7 @@ export const deleteProjectData = (index) =>{
 export const deleteProjectTeamData = (index) =>{
     return async(dispatch) =>{
         try {
-            const response = await axios.delete(`http://localhost:8043/projects/${index}`);
+            const response = await axios.delete(`http://localhost:8080/projects/${index}`);
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheProject(index))
         } catch (error) {
@@ -60,7 +60,7 @@ export const updateProjectData = (id, name) =>{
     return async(dispatch) =>{
         try {
             let details = { name };
-            const response = await axios.put(`http://localhost:8043/projects/${id}`, details);
+            const response = await axios.put(`http://localhost:8080/projects/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingProject({ id: id, details: details }));
             notify(response.data.message);
@@ -72,12 +72,13 @@ export const updateProjectData = (id, name) =>{
           }
     }
 }
-export const addProjectData = (name) =>{
+export const addProjectData = (project) =>{
     // console.log( user)
     return async(dispatch) =>{
         try {
-            const response = await axios.post('http://localhost:8043/projects/', {name});
+            const response = await axios.post('http://localhost:8080/projects/', project);
             dispatch(addingProject(response.data.data));
+            console.log(response.data.data);
             notify(response.data.message);
         } catch (error) {
             if (error.response) {
@@ -92,7 +93,7 @@ export const addProjecTeamData = (projectId, teamId) =>{
     // console.log( user)
     return async(dispatch) =>{
         try {
-            const response = await axios.post(`http://localhost:8043/projects/${projectId}/teams/${teamId}`);
+            const response = await axios.post(`http://localhost:8080/projects/${projectId}/teams/${teamId}`);
             // dispatch(addingProjectTeam(response.data.data));
             console.log(response.data)
             notify(response.data.message);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./NavBar.css";
+import { DoLogout } from "../Authentication";
 // import { CodeIcon, HamburgetMenuClose, HamburgetMenuOpen } from "../Icons";
 // import CodeIcon from '../Icons/code-bold.svg'
 // import HamburgetMenuOpen from '../Icons/close-fill.svg'
@@ -9,6 +10,7 @@ import "./NavBar.css";
 
 function NavBar() {
   const [click, setClick] = useState(false);
+  const navigate = useNavigate();
 
   const handleClick = () => setClick(!click);
   return (
@@ -27,7 +29,7 @@ function NavBar() {
             <li className="nav-item">
               <NavLink
                 exact
-                to="/"
+                to="/admin/hierarchy"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
@@ -38,7 +40,7 @@ function NavBar() {
             <li className="nav-item">
               <NavLink
                 exact
-                to="/users"
+                to="/admin/users"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
@@ -49,7 +51,7 @@ function NavBar() {
             <li className="nav-item">
               <NavLink
                 exact
-                to="/projects"
+                to="/admin/projects"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
@@ -60,7 +62,7 @@ function NavBar() {
             <li className="nav-item">
               <NavLink
                 exact
-                to="/teams"
+                to="/admin/teams"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
@@ -74,9 +76,13 @@ function NavBar() {
                 to="/login"
                 activeClassName="active"
                 className="nav-links"
-                onClick={handleClick}
+                onClick={() => {
+                    DoLogout(() => {
+                      navigate("/login");
+                    });
+                }}
               >
-                Login
+                Logout
               </NavLink>
             </li>
           </ul>

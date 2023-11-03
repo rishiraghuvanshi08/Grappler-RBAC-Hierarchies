@@ -40,11 +40,11 @@ const AddUser = () => {
   
     const reportingUser = users.find((user) => user.id === reportingID);
   
-    if (!reportingUser) {
-      alert("Reporting ID is not valid");
-      return;
-    }
-    navigate('/users');
+    // if (!reportingUser) {
+    //   alert("Reporting ID is not valid");
+    //   return;
+    // }
+    navigate('/admin/users');
   
     let user = {
       name,

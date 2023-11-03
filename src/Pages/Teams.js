@@ -5,7 +5,7 @@ import { getTeamData, deleteTeamData, updateTeamData, addTeamData } from "../Sli
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import { useNavigate } from "react-router-dom";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import { updateProjectData } from "../Slices/ProjectSlices";
 import {  getUsersData, deleteUserData } from "../Slices/UserSlices";
 
@@ -42,11 +42,17 @@ const Teams = () => {
   const addTeam = (name) => {
     console.log("Add team details ", name, userIds);
     console.log("team ", teams);
+    console.log("outside" ,userIds);  
+    if (!userIds || userIds.length === 0||userIds=='') {
+      console.log("hsgdhs" ,userIds);
+      alert("At least one team member should be selected");
+      return;
+    }
   
     const teamNameExists = teams.some((team) => team.name === name);
     if (teamNameExists) {
       alert("Team with the same name already exists");
-      return; 
+      return;
     }
   
     const teamData = {
@@ -58,9 +64,6 @@ const Teams = () => {
     handleClose();
   };
   
-  
-  
-
   const addUserIdField = () => {
     setUserIds([...userIds, ""]);
     setNumUserIds(numUserIds + 1);
@@ -88,7 +91,7 @@ const Teams = () => {
   };
 
   const teamMember = (IdTeam) => {
-    navigate(`/teams/${IdTeam}/teamDetails`);
+    navigate(`/admin/teams/${IdTeam}/teamDetails`)
   };
 
   useEffect(() => {
@@ -111,7 +114,6 @@ const Teams = () => {
             <th>id</th>
             <th>Name</th>
             <th>Teams Members</th>
-            <th>View projects</th>
             <th>Edit</th>
           </tr>
           {teams !== undefined &&
@@ -120,7 +122,6 @@ const Teams = () => {
                 <th>{item.id}</th>
                 <th>{item.name}</th>
                 <th><button className="tableButton" onClick={() => teamMember(item.id)}>View Members</button></th>
-                <th><button className="tableButton" onClick={() => teamMember(item.id)}>View projects</button></th>
                 <th><button className="tableButton" onClick={() => handleButtonClick(item)}>Edit</button></th>
               </tr>
             ))}
@@ -145,7 +146,7 @@ const Teams = () => {
                 variant="primary"
                 type="submit"
                 style={{ margin: "20px" }}
-                onClick={() => updateTeam(name)}
+                onClick={() => updateTeam(name)}  
               >
                 Save Changes
               </Button>
@@ -177,7 +178,7 @@ const Teams = () => {
                 <Form.Group className="mb-3" controlId={`userId${index}`} key={index}>
                   <Form.Label>User ID</Form.Label>
                   <Form.Control
-                    type="text"
+                    type="number"
                     placeholder="Enter User ID"
                     defaultValue={userId}
                     onChange={(e) => {

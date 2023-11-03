@@ -45,11 +45,11 @@ const Users = () => {
   };
 
   const updateUser = () => {
-    const emailExists = users.some((user) => user.email === email && user.id !== id);
-    if (emailExists) {
-      alert("Email already exists");
-      return;
-    }
+    // const emailExists = users.some((user) => user.email === email && user.id !== id);
+    // if (emailExists) {
+    //   alert("Email already exists");
+    //   return;
+    // }
     dispatch(updateUserData(id, name, email, designation));
     handleClose();
   }
@@ -103,7 +103,7 @@ const Users = () => {
                   <th>{item.designation}</th>
                   <th>
                     <button className="tableButton"
-                    onClick={()=>navigate(`/users/hierarchy/reporting/${item.id}`)}>View</button>
+                    onClick={()=>navigate(`/admin/users/hierarchy/reporting/${item.id}`)}>View</button>
                   </th>
                   <th>
                     <button
@@ -176,7 +176,7 @@ const Users = () => {
             variant="primary"
             type="submit"
             style={{ margin: "20px" }}
-            onClick={() => navigate('/users/addUser')}
+            onClick={() => navigate('/admin/users/addUser')}
           >
             ADD USER
           </Button>
