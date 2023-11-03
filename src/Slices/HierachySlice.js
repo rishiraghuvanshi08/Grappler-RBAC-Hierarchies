@@ -9,7 +9,7 @@ export const getHeirarchyData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingHierarchyRequest());
-          const response = await axios.get('http://localhost:8043/hierarchy/reporting');
+          const response = await axios.get('http://localhost:8080/hierarchy/reporting');
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingHierarchySuccess(data));
@@ -22,7 +22,7 @@ export const getHeirarchyIdData = (index) =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingHierarchyRequest());
-          const response = await axios.get(`http://localhost:8043/hierarchy/reporting/${index}`);
+          const response = await axios.get(`http://localhost:8080/hierarchy/reporting/${index}`);
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingHierarchySuccess(data));

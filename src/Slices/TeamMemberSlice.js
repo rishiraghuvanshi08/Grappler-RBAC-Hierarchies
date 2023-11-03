@@ -10,7 +10,7 @@ export const getTeamMemberData = (teamId) =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamMemberRequest());
-          const response = await axios.get(`http://localhost:8043/team-members/${teamId}`);
+          const response = await axios.get(`http://localhost:8080/team-members/${teamId}`);
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingTeamMemberSuccess(data));
@@ -22,7 +22,7 @@ export const getTeamMemberData = (teamId) =>{
 export const deleteTeamMemberData = (index) =>{
     return async(dispatch) =>{
         try {
-            const response = await axios.delete(`http://localhost:8043/projects/${index}`);
+            const response = await axios.delete(`http://localhost:8080/projects/${index}`);
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheTeamMember(index))
         } catch (error) {
@@ -34,7 +34,7 @@ export const updateTeamMemberData = (id, name) =>{
     return async(dispatch) =>{
         try {
             let details = { name };
-            const response = await axios.put(`http://localhost:8043/projects/${id}`, details);
+            const response = await axios.put(`http://localhost:8080/projects/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingTeamMember({ id: id, details: details }));
           } catch (error) {
@@ -45,7 +45,7 @@ export const updateTeamMemberData = (id, name) =>{
 export const addTeamMemberData = (teamId, userId) =>{
     return async(dispatch, getState) =>{
         try {
-            await axios.post(`http://localhost:8043/team-members/${teamId}/add-new-member/${userId}`);
+            await axios.post(`http://localhost:8080/team-members/${teamId}/add-new-member/${userId}`);
             const store = getState().userList;
             console.log("HERE I AM USING ",store);
             dispatch(addingTeamMember({store, userId}));

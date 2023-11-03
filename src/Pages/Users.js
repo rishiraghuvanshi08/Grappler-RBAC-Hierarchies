@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { useSelector, useDispatch } from "react-redux";
-import {  getUsersData, deleteUserData } from "../Slices/UserSlices";
+  import {  getUsersData, deleteUserData } from "../Slices/UserSlices";
 import Button from "react-bootstrap/Button"; 
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -12,8 +12,6 @@ import Swal from "sweetalert2";
 const Users = () => {
     const {users, isLoading, error}  = useSelector((state) => state.userList);
     console.log("users", users);
-//   console.log("loading",isLoading);
-//   console.log("errror",error);
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,7 +45,11 @@ const Users = () => {
   };
 
   const updateUser = () => {
-    // console.log(name)
+    const emailExists = users.some((user) => user.email === email && user.id !== id);
+    if (emailExists) {
+      alert("Email already exists");
+      return;
+    }
     dispatch(updateUserData(id, name, email, designation));
     handleClose();
   }
