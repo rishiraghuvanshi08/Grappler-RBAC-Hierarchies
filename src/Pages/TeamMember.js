@@ -21,11 +21,13 @@ const TeamMember = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 
+  const teamId = useParams();
+
   const addUserToTeam = (uid) => {
     dispatch(addTeamMemberData(id, uId))
     handleClose();
   }
-  const deleteTeam = (teamId) => {
+  const deleteTeam = (teamId, userId) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -36,7 +38,7 @@ const TeamMember = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(deleteTeamMemberData(teamId));
+        dispatch(deleteTeamMemberData(teamId, userId));
       }
     })
   };
@@ -85,7 +87,7 @@ const TeamMember = () => {
                 <th>
                   <button
                     className="tableButton"
-                    onClick={() => deleteTeam(item.id)}
+                    onClick={() => deleteTeam(teamId, item.id)}
                   >
                     Delete
                   </button>
