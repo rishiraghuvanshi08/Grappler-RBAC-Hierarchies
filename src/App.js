@@ -1,7 +1,7 @@
 import "./App.css";
 import NavBar from "./Components/NavBar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./Pages/Home";
+// import Home from "./Pages/Home";
 import Users from "./Pages/Users";
 import Project from "./Pages/Project";
 import Login from "./Pages/Login";
@@ -11,11 +11,23 @@ import HeirachyId from "./Pages/HierarchyId";
 import AddProject from "./Pages/AddProject";
 import Teams from "./Pages/Teams";
 import TeamMember from "./Pages/TeamMember";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import Dashboard from './Pages/Dashboard';
+import PrivateRoute from './Pages/PrivateRoute';
+// import { DoLogout } from '../Authentication'
+// import { useNavigate } from 'react-router-dom'
+import 'react-toastify/dist/ReactToastify.css';
+// import jwt_decode from 'jwt-decode';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 function App() {
+  // const navigate = useNavigate();
+  // const data = localStorage.getItem('data');
+  // const parsedData = JSON.parse(data);
+  // const decodedToken = jwt_decode(parsedData.jwtToken);
+  // const role = decodedToken.role;
+  // console.log("role",role);
   return (
     <div className="App">
       <Router>
@@ -35,6 +47,9 @@ function App() {
               element={<HeirachyId />}
             />
             <Route path="/projects/addProject" element={<AddProject />} />
+            <Route path="/users" element={<PrivateRoute/>} >
+              <Route path="dashboard" element={<Dashboard/>} />
+            </Route>
           </Routes>
         </div>
       </Router>

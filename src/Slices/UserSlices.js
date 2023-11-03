@@ -11,7 +11,7 @@ export const getUsersData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingDataRequest());
-          const response = await axios.get('http://localhost:8080/users/');
+          const response = await axios.get('http://localhost:8043/users/');
           const data = response.data;
           dispatch(fetchingDataSuccess(data));
           return data;
@@ -23,7 +23,7 @@ export const getUsersData = () =>{
 export const deleteUserData = (index) =>{
     return async(dispatch) =>{
         try {
-            const response = await axios.delete(`http://localhost:8080/users/${index}`);
+            const response = await axios.delete(`http://localhost:8043/users/${index}`);
             dispatch(deletingTheUser(index))
             Swal.fire(
                 'Deleted!',
