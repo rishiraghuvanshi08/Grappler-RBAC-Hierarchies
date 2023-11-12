@@ -7,21 +7,21 @@ const initialState = {
     isLoading: false,
     error: null,
 }
-export const getUsersData = () =>{
-    return async(dispatch) =>{
+export const getUsersData = () => {
+    return async (dispatch) => {
         try {
-          dispatch(fetchingDataRequest());
-          const response = await axios.get('http://localhost:8080/users/');
-          const data = response.data;
-          dispatch(fetchingDataSuccess(data));
-          return data;
+            dispatch(fetchingDataRequest());
+            const response = await axios.get('http://localhost:8080/users/');
+            const data = response.data;
+            dispatch(fetchingDataSuccess(data));
+            return data;
         } catch (error) {
-          dispatch(fetchingDataFailure(error));
+            dispatch(fetchingDataFailure(error));
         }
     }
 }
-export const deleteUserData = (index) =>{
-    return async(dispatch) =>{
+export const deleteUserData = (index) => {
+    return async (dispatch) => {
         try {
             const response = await axios.delete(`http://localhost:8080/users/${index}`);
             dispatch(deletingTheUser(index))
@@ -39,8 +39,8 @@ export const deleteUserData = (index) =>{
         }
     }
 }
-export const addUserData = (user) =>{
-    return async(dispatch) =>{
+export const addUserData = (user) => {
+    return async (dispatch) => {
         try {
             const response = await axios.post('http://localhost:8080/users/', user);
             let newUser = {
@@ -48,7 +48,7 @@ export const addUserData = (user) =>{
                 name: user.name,
                 email: user.email,
                 designation: user.designation
-              };
+            };
             dispatch(addingUser(newUser));
             notify(response.data.message);
         } catch (error) {
@@ -59,102 +59,114 @@ export const addUserData = (user) =>{
         }
     }
 }
-export const updateUserData = (id, name, email, designation) =>{
-    return async(dispatch) =>{
+export const updateUserData = (id, name, email, designation) => {
+    return async (dispatch) => {
         try {
             let details = { name, email, designation };
             const response = await axios.put(`http://localhost:8080/users/${id}`, details);
             // console.log('Resource updated successfully.', response.data);
             dispatch(updatingUser({ id: id, details: details }));
             notify(response.data.message);
-          } catch (error) {
-            if (error.response) {
-                notify(error.response.data.message);
-            }
-            console.log('Error updating resource: ' + error.message);
-          }
-    }
-}
-
-export const updateUserIdData = (id, name, email, designation) =>{
-    return async(dispatch) =>{
-        try {
-            let details = {name, email, designation };
-            const response = await axios.put(`http://localhost:8080/users/${id}`, details);
-            console.log('Resource updated successfully.', response.data);
-            dispatch(updatingUserbyId(response.data.data));
-            notify(response.data.message);
-          } catch (error) {
-            if (error.response) {
-                notify(error.response.data.message);
-            }
-            console.log('Error updating resource: ' + error.message);
-          }
-    }
-}
-
-export const getUsersDataId = (id) =>{
-    return async(dispatch) =>{
-        try {
-          dispatch(fetchingDataRequest());
-          const response = await axios.get(`http://localhost:8080/users/${id}`);
-          const data = response.data;
-          dispatch(fetchingDataIDSuccess(data));
-          return data;
         } catch (error) {
-          dispatch(fetchingDataFailure(error));
+            if (error.response) {
+                notify(error.response.data.message);
+            }
+            console.log('Error updating resource: ' + error.message);
         }
     }
 }
 
+export const updateUserIdData = (uid, name, email, designation) => {
+    return async (dispatch) => {
+        try {
+            let details = { name, email, designation };
+            const response = await axios.put(`http://localhost:8080/users/${uid}`, details);
+            console.log('Resource updated successfully.', response.data);
+            dispatch(updatingUserbyId({ id: uid, details: details }));
+            notify(response.data.message);
+        } catch (error) {
+            if (error.response) {
+                notify(error.response.data.message);
+            }
+            console.log('Error updating resource: ' + error.message);
+        }
+    }
+}
+
+// export const getUsersDataId = (email) => {
+//     return async (dispatch) => {
+//         try {
+//             dispatch(fetchingDataRequest());
+//             const response = await axios.get(`http://localhost:8080/users?email=${email}`);
+//             dispatch(fetchingDataIDSuccess(response.data));
+//             return response.data.id;
+//         } catch (error) {
+//             dispatch(fetchingDataFailure(error));
+//         }
+//     }
+// }
+
 const userSlice = createSlice({
-    name : 'users',
+    name: 'users',
     initialState,
-    reducers : {
-        fetchingDataRequest : (state) =>{
-            state.isLoading =  true;
+    reducers: {
+        fetchingDataRequest: (state) => {
+            state.isLoading = true;
             state.error = null;
         },
-        fetchingDataSuccess : (state, action) =>{
+        fetchingDataSuccess: (state, action) => {
             state.users = action.payload;
-            state.isLoading =  false;
+            state.isLoading = false;
             state.error = null;
         },
-        fetchingDataFailure : (state, action) =>{
+        fetchingDataFailure: (state, action) => {
             state.users = [];
-            state.isLoading =  false;
+            state.isLoading = false;
             state.error = null;
         },
-        addingUser : (state, action) =>{
+        addingUser: (state, action) => {
             console.log("Inside Reducer", action)
             // state.users = action.payload;
             let users = [...state.users];
             users.push(action.payload);
             state.users = users;
         },
-        deletingTheUser : (state, action) =>{
+        deletingTheUser: (state, action) => {
             const updatedItems = state.users.filter((item, index) => item.id !== action.payload);
             state.users = updatedItems;
         },
-        updatingUser : (state, action) =>{
+        updatingUser: (state, action) => {
             const updatedItems = state.users.map((item) => item.id === action.payload.id ? { ...item, ...action.payload.details } : item);
             state.users = updatedItems;
         },
-        updatingUserbyId : (state, action) =>{
-            // console.log();
-            const updatedItems = action.payload;
-            state.users = updatedItems;
-            // console.log(state.users);
+        updatingUserbyId: (state, action) => {
+            const updatedUser = {
+                id: action.payload.id,
+                name: action.payload.details.name,
+                email: action.payload.details.email,
+                designation: action.payload.details.designation,
+            }
+            const updatedUsers = state.users.map(user => {
+                if (user.id === updatedUser.id) {
+                    // If the user id matches the updated user's id, update the user
+                    return updatedUser;
+                }
+                return user; // Return the original user if it doesn't match
+            });
+
+            return {
+                ...state,
+                users: updatedUsers,
+            };
         },
-        fetchingDataIDSuccess : (state, action) =>{
-            state.users = action.payload;
-            state.isLoading =  false;
-            state.error = null;
-        },
+        // fetchingDataIDSuccess: (state, action) => {
+        //     state.users = action.payload;
+        //     state.isLoading = false;
+        //     state.error = null;
+        // },
     }
 })
 export const {
-    fetchingDataRequest, fetchingDataSuccess, fetchingDataFailure, deletingTheUser, addingUser, updatingUser, updatingUserbyId, fetchingDataIDSuccess
+    fetchingDataRequest, fetchingDataSuccess, fetchingDataFailure, deletingTheUser, addingUser, updatingUser, updatingUserbyId
 } = userSlice.actions;
 export default userSlice.reducer;
-  

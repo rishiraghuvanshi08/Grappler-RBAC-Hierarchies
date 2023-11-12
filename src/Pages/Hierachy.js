@@ -32,6 +32,8 @@ import {
   makeStyles,
   ThemeProvider
 } from "@material-ui/core/styles";
+import { getProjectData } from "../Slices/ProjectSlices";
+import { getUsersData } from "../Slices/UserSlices";
 
 const useStyles = makeStyles((theme) => ({
   root: {

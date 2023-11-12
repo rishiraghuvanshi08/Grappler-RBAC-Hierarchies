@@ -1,4 +1,6 @@
+import Swal from 'sweetalert2';
 import setAuthToken from './setAuthToken';
+import { useNavigate } from 'react-router-dom';
 // isLoggedIn =>
 export const IsLoggedIn = () => {
     let data = localStorage.getItem("data");
@@ -17,10 +19,12 @@ export const DoLogin = (data, next) => {
     next();
 }
 // doLogout => remove from localstorage
-export const DoLogout = (next) => {
+export const DoLogout = () => {
     localStorage.removeItem("data");
     setAuthToken();
-    next();
+    Swal.fire(
+        'Logout Successful!',
+    )
 }
 // Get currentUser
 export const getCurrentUserDetails = () => {

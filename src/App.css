@@ -46,3 +46,33 @@ body {
       flex-direction: column;
       justify-content: center;
   }
+
+  #errorDiv {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 24px;
+    color: #FF0000; /* Red text color for error messages */
+    background-color: #FFDDDD; /* Light red background for the error message */
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners for the background */
+    font-family: 'Your Unique Font', sans-serif; /* Use your unique font or a Google Font */
+  }
+  
+  #errorDiv Button {
+    background-color: #FFA500; /* Orange background color for the button */
+    color: #fff; /* White text color for the button */
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
+    width: 280px;
+    margin-top: 20px;
+  }
+  
+  #errorDiv Button:hover {
+    background-color: #FF8C00; /* Slightly darker orange on hover */
+  }
+  
+  

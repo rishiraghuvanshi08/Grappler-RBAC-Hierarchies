@@ -1,6 +1,6 @@
 import "./App.css";
 import NavBar from "./Components/NavBar";
-import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate } from "react-router-dom";
 // import Home from "./Pages/Home";
 import Users from "./Pages/Users";
 import Project from "./Pages/Project";
@@ -16,11 +16,15 @@ import PrivateRoute from './Pages/PrivateRoute';
 // import { DoLogout } from '../Authentication'
 // import { useNavigate } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css';
-
+import { jwtDecode } from 'jwt-decode';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import UsersDashboard from "./Pages/UserDashboard";
+import UserProjects from "./Pages/UserProjects";
+import UserTeams from "./Pages/UserTeams";
+import AdminDashboard from "./Pages/AdminDashboard";
+import Errors from "./Pages/Error";
 function App() {
 
   return (
@@ -28,8 +32,13 @@ function App() {
       <Router>
         <div className="pages">
           <Routes>
-          <Route path="/login" element={<Login />} />
-            <Route path="/admin" element={<PrivateRoute />} >
+            <Route
+              path="/"
+              element={<Navigate to="/login" />}
+            />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin" element={<PrivateRoute allowedRoles="ROLE_ADMIN" />} >
+              <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="hierarchy" element={<Hierachy />} />
               <Route path="users" element={<Users />} />
               <Route path="teams" element={<Teams />} />
@@ -42,23 +51,16 @@ function App() {
               />
               <Route path="projects/addProject" element={<AddProject />} />
             </Route>
-            <Route path="/users" element={<PrivateRoute />} >
+            <Route path="/users" element={<PrivateRoute allowedRoles="ROLE_USER" />} >
               <Route path="dashboard" element={<UsersDashboard />} />
+              <Route path="projects" element={<UserProjects />} />
+              <Route path="teams" element={<UserTeams />} />
             </Route>
+            <Route path='*' element={<Errors />} />
           </Routes>
         </div>
       </Router>
-      {/* <Router>
-        <NavBar />
-        <div className="pages">
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/users" element={<PrivateRoute />} >
-              <Route path="dashboard" element={<Dashboard />} />
-            </Route>
-          </Routes>
-        </div>
-      </Router> */}
+
       <ToastContainer
         position="top-center"
         autoClose={5000}

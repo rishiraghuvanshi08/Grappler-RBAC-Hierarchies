@@ -39,14 +39,28 @@ const Project = () => {
       })
   };
 
-  const deleteTeam = (index) => {
-      dispatch(deleteProjectTeamData(index));
+  const deleteTeam = (projectId, teamId) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteProjectTeamData(projectId, teamId));
+        }
+      })
   };
 
   const updateProject = (id, name,) => {
     console.log(name)
-    dispatch(updateProjectData(id, name));
-    handleClose();
+    if(name){
+      dispatch(updateProjectData(id, name));
+      handleClose();
+    }
   }
 
   const handleSubmit = (e) => {
@@ -76,9 +90,8 @@ const Project = () => {
     setTeamField(!teamField);
   }
   useEffect(() => {
-    // console.log("hello");
     dispatch(getProjectData());
-  },[dispatch]);
+  },[]);
 
   // if (isProjectLoading) {
   //   return <div>Loading...</div>;
@@ -87,6 +100,7 @@ const Project = () => {
   // if (projectError) {
   //   return <div>Error: {projectError.message}</div>;
   // }
+  
   return (
     <div>
     <>
@@ -130,7 +144,7 @@ const Project = () => {
               <Form.Group className="mb-3" controlId="Name">
                 <Form.Label>Name</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="text" required
                   placeholder="Enter Name"
                   defaultValue={name || ""}
                   onChange={(e) => setName(e.target.value)}
@@ -153,6 +167,7 @@ const Project = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+
         <Modal show={view} onHide={closeHandle}>
           <Modal.Header closeButton>
             <Modal.Title>View</Modal.Title>
@@ -171,7 +186,7 @@ const Project = () => {
             <tr key={index}>
             <th>{elem.id}</th>
             <th>{elem.name}</th>
-            <th><button className="tableButton" onClick={() => deleteTeam(elem.id)}>Delete</button></th>
+            <th><button className="tableButton" onClick={() => deleteTeam(projectId ,elem.id)}>Delete</button></th>
             <th><button className="tableButton"  onClick={() => teamMember(elem.id, projectId)}>View Members</button></th>
             </tr>
           ))}

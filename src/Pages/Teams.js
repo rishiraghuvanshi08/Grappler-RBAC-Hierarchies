@@ -7,7 +7,8 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import { updateProjectData } from "../Slices/ProjectSlices";
-import {  getUsersData, deleteUserData } from "../Slices/UserSlices";
+import { getUsersData, deleteUserData } from "../Slices/UserSlices";
+import { toast } from "react-toastify";
 
 const Teams = () => {
   const { teams, isTeamsLoading, teamsError } = useSelector((state) => state.teamsList);
@@ -31,39 +32,45 @@ const Teams = () => {
     console.log("update team details ", name, teamId);
     const teamNameExists = teams.some((team) => team.name === name);
     if (teamNameExists) {
-      alert("Team with the same name already exists");
+      notify("Team with the same name already exists");
     }
-    else{
-    dispatch(updateTeamData(teamId, name));
-    handleClose();
+    else if (name) {
+      dispatch(updateTeamData(teamId, name));
+      handleClose();
     }
+  };
+
+  const notify = (msg) => {
+    toast(msg);
   };
 
   const addTeam = (name) => {
     console.log("Add team details ", name, userIds);
     console.log("team ", teams);
-    console.log("outside" ,userIds);  
-    if (!userIds || userIds.length === 0||userIds=='') {
-      console.log("hsgdhs" ,userIds);
-      alert("At least one team member should be selected");
+    console.log("outside", userIds);
+    if (!userIds || userIds.length === 0 || userIds == '') {
+      console.log("hsgdhs", userIds);
+      notify("At least one team member should be selected");
       return;
     }
-  
+
     const teamNameExists = teams.some((team) => team.name === name);
     if (teamNameExists) {
-      alert("Team with the same name already exists");
+      notify("Team with the same name already exists");
       return;
     }
-  
-    const teamData = {
-      id: '',
-      name: name,
-      teamMembers: userIds.map(userId => ({ user: { id: userId } }))
-    };
-    dispatch(addTeamData(teamData));
-    handleClose();
+    if (name) {
+      const teamData = {
+        id: '',
+        name: name,
+        teamMembers: userIds.map(userId => ({ user: { id: userId } }))
+      };
+      dispatch(addTeamData(teamData));
+      handleClose();
+    }
+
   };
-  
+
   const addUserIdField = () => {
     setUserIds([...userIds, ""]);
     setNumUserIds(numUserIds + 1);
@@ -146,7 +153,7 @@ const Teams = () => {
                 variant="primary"
                 type="submit"
                 style={{ margin: "20px" }}
-                onClick={() => updateTeam(name)}  
+                onClick={() => updateTeam(name)}
               >
                 Save Changes
               </Button>

@@ -6,11 +6,25 @@ const initialState = {
     isLoadingTeam: false,
     teamError: null,
 }
+
+export const getUserTeamData = (userId) =>{
+    return async(dispatch) =>{
+        try {
+          dispatch(fetchingTeamRequest());
+          const response = await axios.get(`http://localhost:8080/users/teams/${userId}`);
+          dispatch(fetchingTeamSuccess(response.data.data));
+        } catch (error) {
+          dispatch(fetchingTeamFailure(error));
+        }
+    }
+}
+
+
 export const getTeamData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamRequest());
-          const response = await axios.get('http://localhost:8080/teams');
+          const response = await axios.get('http://localhost:8080/teams/');
           const data = response.data;
         //   console.log("data here", data);
           dispatch(fetchingTeamSuccess(data));

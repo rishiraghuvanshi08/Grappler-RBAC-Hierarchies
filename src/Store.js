@@ -5,6 +5,9 @@ import HierachySlice from "./Slices/HierachySlice";
 import TeamSlice from "./Slices/TeamSlice";
 import TeamMemberSlice from "./Slices/TeamMemberSlice";
 import loginSlice from '../src/Slices/loginSlice';
+import LoginUserSlice from "./Slices/LoginUserSlice";
+import otpSlice from "./Slices/otpSlice";
+import PasswordChangeSlice from "./Slices/PasswordChangeSlice";
 
 const store = configureStore({
     reducer:{
@@ -14,6 +17,9 @@ const store = configureStore({
         viewHierarchy : HierachySlice,
         teamsList : TeamSlice,
         teaMemberList : TeamMemberSlice,
+        loginUser: LoginUserSlice,
+        emailStatus:otpSlice,
+        resetPasswordStatus: PasswordChangeSlice,
     },
 });
 export default store;

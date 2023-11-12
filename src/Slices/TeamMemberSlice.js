@@ -20,12 +20,13 @@ export const getTeamMemberData = (teamId) =>{
         }
     }
 }
-export const deleteTeamMemberData = (index) =>{
+export const deleteTeamMemberData = (teamId, userId) =>{
     return async(dispatch) =>{
         try {
-            const response = await axios.delete(`http://localhost:8080/team-members/${index}`);
+            console.log(teamId, userId, "rishiii");
+            const response = await axios.delete(`http://localhost:8080/team-members/${teamId.id}/delete-member/${userId}`);
             console.log('Resource deleted successfully.', response.data);
-            dispatch(deletingTheTeamMember(index))
+            dispatch(deletingTheTeamMember(userId))
 
             Swal.fire(
                 'Deleted!',
@@ -98,7 +99,7 @@ const teamSlice = createSlice({
             const updatedItems = action.payload.store.users.filter((item) => item.id == action.payload.userId);
             let teamMember = [...state.teamMember];
             teamMember.push(updatedItems[0]);
-            state.teamMember = teamMember;  
+            state.teamMember = teamMember;
         },
         deletingTheTeamMember : (state, action) =>{
             const updatedItems = state.teamMember.filter((item) => item.id !== action.payload);
