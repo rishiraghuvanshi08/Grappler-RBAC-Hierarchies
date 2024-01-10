@@ -75,4 +75,7 @@ body {
     background-color: #FF8C00; /* Slightly darker orange on hover */
   }
   
+  #loginPassField{
+    display: flex;
+  }
   

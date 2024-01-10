@@ -23,6 +23,7 @@ const Login = () => {
     password: '',
     showPassword: false,
   })
+  const [showOldPassword, setShowOldPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setLoginDetails({
@@ -33,7 +34,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   };
-  const notify2 = () =>{
+  const notify2 = () => {
     toast.success("Login Success");
   }
   const notify = (msg) => toast(msg);
@@ -65,7 +66,7 @@ const Login = () => {
       [field]: actualValue,
     });
   };
-  const loginForm = () =>{
+  const loginForm = () => {
     dispatch(getLoginStatus(loginDetails))
       .then((data) => {
         if (data != undefined) {
@@ -134,13 +135,21 @@ const Login = () => {
           </Form.Group>
           <Form.Group className="mb-3" controlId="password">
             <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              id="password"
-              value={loginDetails.password}
-              onChange={(e) => handleChange(e, 'password')}
-              required
-            />
+            <div id="loginPassField">
+              <Form.Control
+                type={showOldPassword ? 'text' : 'password'}
+                id="password"
+                value={loginDetails.password}
+                onChange={(e) => handleChange(e, 'password')}
+                required
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={() => setShowOldPassword(!showOldPassword)}
+              >
+                <FontAwesomeIcon icon={showOldPassword ? faEye : faEyeSlash} />
+              </Button>
+            </div>
           </Form.Group>
           <Button
             variant="danger"
