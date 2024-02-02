@@ -345,16 +345,6 @@ function Organization({ org, onCollapse, collapsed, onDrop }) {
         }
         title={org?.name + ' (' + org?.designation + ')'}
       />
-
-      <IconButton
-        size="small"
-        onClick={onCollapse}
-        className={clsx(classes.expand, {
-          [classes.expandOpen]: !collapsed
-        })}
-      >
-        <ExpandMoreIcon />
-      </IconButton>
     </Card>
   );
 }

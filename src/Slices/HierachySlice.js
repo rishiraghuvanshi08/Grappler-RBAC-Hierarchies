@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../Authentication";
 const initialState = {
     hierarchy: [],
     isLoadingHeirarchy: false,
@@ -13,7 +14,7 @@ export const getHeirarchyData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingHierarchyRequest());
-          const response = await axios.get('https://grappler-backend-rest-api-production.up.railway.app/hierarchy/reporting');
+          const response = await axios.get(`${API_BASE_URL}/hierarchy/reporting`);
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingHierarchySuccess(data));
@@ -28,7 +29,7 @@ export const updateHierarchy = (updateRequest) =>{
         try {
             console.log("Inside update ", updateRequest);
             dispatch(fetchingHierarchyRequest());
-            const response = await axios.post(`https://grappler-backend-rest-api-production.up.railway.app/hierarchy/update-reporting-hierarchy`, updateRequest);
+            const response = await axios.post(`${API_BASE_URL}/hierarchy/update-reporting-hierarchy`, updateRequest);
             notify(response.data.message);
             dispatch(updateSuccess());
         } catch (error) {
@@ -45,7 +46,7 @@ export const getHeirarchyIdData = (index) =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingHierarchyRequest());
-          const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/hierarchy/reporting/${index}`);
+          const response = await axios.get(`${API_BASE_URL}/hierarchy/reporting/${index}`);
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingHierarchySuccess(data));

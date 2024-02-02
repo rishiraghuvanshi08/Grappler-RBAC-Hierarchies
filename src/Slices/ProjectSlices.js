@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import { notify } from "../Components/Toastify.js"
 import Swal from "sweetalert2";
+import { API_BASE_URL } from "../Authentication/index.js";
 const initialState = {
     projects: [],
     isLoadingProject: false,
@@ -11,7 +12,7 @@ export const getUserProjectsData = (userId) => {
     return async (dispatch) => {
         try {
             dispatch(fetchingDataRequest());
-            const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/users/project/${userId}`);
+            const response = await axios.get(`${API_BASE_URL}/users/project/${userId}`);
             const data = response.data.data;
             //   console.log("data here", data);
             dispatch(fetchingDataSuccess(data));
@@ -28,7 +29,7 @@ export const getProjectData = () => {
     return async (dispatch) => {
         try {
             dispatch(fetchingDataRequest());
-            const response = await axios.get('https://grappler-backend-rest-api-production.up.railway.app/projects/');
+            const response = await axios.get(`${API_BASE_URL}/projects/`);
             const data = response.data;
             //   console.log("data here", data);
             dispatch(fetchingDataSuccess(data));
@@ -43,7 +44,7 @@ export const getProjectData = () => {
 export const deleteProjectData = (index) => {
     return async (dispatch) => {
         try {
-            const response = await axios.delete(`https://grappler-backend-rest-api-production.up.railway.app/projects/${index}`);
+            const response = await axios.delete(`${API_BASE_URL}/projects/${index}`);
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheProject(index))
             Swal.fire(
@@ -62,7 +63,7 @@ export const deleteProjectData = (index) => {
 export const deleteProjectTeamData = (projectId, teamId) => {
     return async (dispatch) => {
         try {
-            const response = await axios.delete(`https://grappler-backend-rest-api-production.up.railway.app/projects/${projectId}/teams/${teamId}`);
+            const response = await axios.delete(`${API_BASE_URL}/projects/${projectId}/teams/${teamId}`);
             const object = {
                 pId: projectId,
                 tId: teamId,
@@ -85,7 +86,7 @@ export const updateProjectData = (id, name) => {
     return async (dispatch) => {
         try {
             let details = { name };
-            const response = await axios.put(`https://grappler-backend-rest-api-production.up.railway.app/projects/${id}`, details);
+            const response = await axios.put(`${API_BASE_URL}/projects/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingProject({ id: id, details: details }));
             notify(response.data.message);
@@ -101,7 +102,7 @@ export const addProjectData = (project) => {
     // console.log( user)
     return async (dispatch) => {
         try {
-            const response = await axios.post('https://grappler-backend-rest-api-production.up.railway.app/projects/', project);
+            const response = await axios.post(`${API_BASE_URL}/projects/`, project);
             const newProject = {
                 id: response.data.data,
                 name: project.name,
@@ -122,7 +123,7 @@ export const addProjectData = (project) => {
 export const addProjecTeamData = (projectId, teamIds) => {
     return async (dispatch) => {
         try {
-            const response = await axios.post(`https://grappler-backend-rest-api-production.up.railway.app/projects/${projectId}/teams`, teamIds);
+            const response = await axios.post(`${API_BASE_URL}/projects/${projectId}/teams`, teamIds);
             const object = {
                 pId: projectId,
                 team: response.data.data,

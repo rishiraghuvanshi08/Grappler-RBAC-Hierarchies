@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { API_BASE_URL } from '../Authentication';
 
 export const getLoginStatus = ( loginDetails ) => {
     return async (dispatch) => {
         try {
             dispatch(loading());
-            const response = await axios.post("https://grappler-backend-rest-api-production.up.railway.app/auth/login", loginDetails);
+            const response = await axios.post(`${API_BASE_URL}/auth/login`, loginDetails);
             if(response.status === 200) {
                 dispatch(getAuthenticationFulfiled(response.data));
                 return response.data;

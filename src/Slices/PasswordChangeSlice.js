@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { API_BASE_URL } from '../Authentication';
 export const passwordChange = (passwords) => {
     console.log("inside poassword change ",passwords);
     return async (dispatch) => {
         try {
             dispatch(loading());
-            const response = await axios.post("https://grappler-backend-rest-api-production.up.railway.app/users/change-password", passwords);
+            const response = await axios.post(`${API_BASE_URL}/users/change-password`, passwords);
             dispatch(getPasswordSuccess(response.data));
             return response.data;
         }

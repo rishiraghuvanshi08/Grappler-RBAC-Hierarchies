@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import { notify } from "../Components/Toastify";
 import Swal from "sweetalert2";
+import { API_BASE_URL } from "../Authentication";
 const initialState = {
     user: [],
     isLoading: false,
@@ -12,7 +13,7 @@ export const getUsersDataId = (email) => {
     return async (dispatch) => {
         try {
             dispatch(fetchingDataRequest());
-            const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/users?email=${email}`);
+            const response = await axios.get(`${API_BASE_URL}/users?email=${email}`);
             dispatch(fetchingDataIDSuccess(response.data));
             return response.data.id;
         } catch (error) {
