@@ -2,7 +2,7 @@ import Swal from 'sweetalert2';
 import setAuthToken from './setAuthToken';
 import { useNavigate } from 'react-router-dom';
 
-export const API_BASE_URL = "https://rishi-grappler-rbac.vercel.app";
+export const API_BASE_URL = "https://grappler-backend-rest-api-production.up.railway.app";
 
 // isLoggedIn =>
 export const IsLoggedIn = () => {
