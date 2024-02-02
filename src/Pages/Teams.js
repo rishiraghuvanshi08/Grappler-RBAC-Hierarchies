@@ -9,6 +9,7 @@ import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import { updateProjectData } from "../Slices/ProjectSlices";
 import { getUsersData, deleteUserData } from "../Slices/UserSlices";
 import { toast } from "react-toastify";
+import Select from 'react-select';
 
 const Teams = () => {
   const { teams, isTeamsLoading, teamsError } = useSelector((state) => state.teamsList);
@@ -21,6 +22,27 @@ const Teams = () => {
   const [view, setView] = useState(false);
   const [userIds, setUserIds] = useState([""]);
   const [numUserIds, setNumUserIds] = useState(1);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const { users, isLoading, error } = useSelector((state) => ({
+    users: Array.isArray(state.userList.users) ? state.userList.users : [],
+    isLoading: state.userList.isLoading,
+    error: state.userList.error,
+  }));
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      border: "1px solid #ced4da",
+      borderRadius: "4px",
+      width: "100%",
+    }),
+  };
+
+  const userOptions = users.map((user) => ({
+    value: user.id,
+    label: user.name,
+  }));
+
   const handleClose = () => {
     setShow(false);
     setAddShow(false);
@@ -45,11 +67,7 @@ const Teams = () => {
   };
 
   const addTeam = (name) => {
-    console.log("Add team details ", name, userIds);
-    console.log("team ", teams);
-    console.log("outside", userIds);
-    if (!userIds || userIds.length === 0 || userIds == '') {
-      console.log("hsgdhs", userIds);
+    if (!selectedUsers || selectedUsers.length === 0) {
       notify("At least one team member should be selected");
       return;
     }
@@ -59,16 +77,16 @@ const Teams = () => {
       notify("Team with the same name already exists");
       return;
     }
+
     if (name) {
       const teamData = {
-        id: '',
+        id: "",
         name: name,
-        teamMembers: userIds.map(userId => ({ user: { id: userId } }))
+        teamMembers: selectedUsers.map((userId) => ({ user: { id: userId } })),
       };
       dispatch(addTeamData(teamData));
       handleClose();
     }
-
   };
 
   const addUserIdField = () => {
@@ -103,6 +121,7 @@ const Teams = () => {
 
   useEffect(() => {
     dispatch(getTeamData());
+    dispatch(getUsersData(false));
   }, [dispatch]);
 
   if (isTeamsLoading) {
@@ -166,63 +185,47 @@ const Teams = () => {
           </Modal.Footer>
         </Modal>
         <Modal show={addShow} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add Team</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form style={{ width: "40%" }} onSubmit={handleSubmit}>
-              <Form.Group className="mb-3" controlId="Name">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter New Team Name"
-                  defaultValue={""}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </Form.Group>
-              {userIds.map((userId, index) => (
-                <Form.Group className="mb-3" controlId={`userId${index}`} key={index}>
-                  <Form.Label>User ID</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Enter User ID"
-                    defaultValue={userId}
-                    onChange={(e) => {
-                      const updatedUserIds = [...userIds];
-                      updatedUserIds[index] = e.target.value;
-                      setUserIds(updatedUserIds);
-                    }}
-                    required
-                  />
-                  {index === userIds.length - 1 && (
-                    <span onClick={addUserIdField} style={{ cursor: "pointer", marginLeft: "10px" }}>
-                      +
-                    </span>
-                  )}
-                  {index === 0 && userIds.length > 1 && (
-                    <span onClick={removeUserIdField} style={{ cursor: "pointer", marginLeft: "10px" }}>
-                      -
-                    </span>
-                  )}
-                </Form.Group>
-              ))}
-              <Button
-                variant="primary"
-                type="submit"
-                style={{ margin: "20px" }}
-                onClick={() => addTeam(name)}
-              >
-                Save Changes
-              </Button>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
+        <Modal.Header closeButton>
+          <Modal.Title>Add Team</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form style={{ width: "40%" }} onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="Name">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter New Team Name"
+                defaultValue={""}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="userDropdown">
+              <Form.Label>User</Form.Label>
+              <Select
+                styles={customStyles}
+                isMulti
+                value={selectedUsers.map((userId) => userOptions.find((user) => user.value === userId))}
+                onChange={(selected) => setSelectedUsers(selected.map((user) => user.value))}
+                options={userOptions}
+              />
+            </Form.Group>
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ margin: "20px" }}
+              onClick={() => addTeam(name)}
+            >
+              Save Changes
             </Button>
-          </Modal.Footer>
-        </Modal>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </Table>
       <Button
         variant="primary"

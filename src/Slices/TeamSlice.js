@@ -58,6 +58,7 @@ export const addTeamData = (teamData) =>{
             console.log("add team ",response.data.data);
             teamData.id=response.data.data
             dispatch(addingTeam(teamData));
+            notify(response.data.message);
           } catch (error) {
             if (error.response) {
                 notify(error.response.data.message);

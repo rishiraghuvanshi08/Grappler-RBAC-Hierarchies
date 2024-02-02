@@ -1,0 +1,14 @@
+/* Styles for the head container */
+.head-container {
+    background-color: #f8fcd3;
+    color: black;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .head-container h3 {
+    margin: 0;
+    font-size: xx-large;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  

@@ -119,17 +119,17 @@ export const addProjectData = (project) => {
         }
     }
 }
-export const addProjecTeamData = (projectId, teamId) => {
+export const addProjecTeamData = (projectId, teamIds) => {
     return async (dispatch) => {
         try {
-            const response = await axios.post(`http://localhost:8080/projects/${projectId}/teams/${teamId}`);
+            const response = await axios.post(`http://localhost:8080/projects/${projectId}/teams`, teamIds);
             const object = {
                 pId: projectId,
                 team: response.data.data,
             }
             dispatch(addingProjectTeam(object));
             console.log(response.data)
-            notify(response.data.message);
+            // notify(response.data.message);
         } catch (error) {
             if (error.response) {
                 const msg = error.response.data.message;

@@ -15,6 +15,8 @@ import Modal from 'react-bootstrap/Modal';
 import { sendOtp } from "../Slices/otpSlice";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import './Login.css';
+
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -120,81 +122,90 @@ const Login = () => {
     setBackendMessage(message);
   };
   return (
-    <div className="formParent">
-      <Container className="formParent-container" style={{ 'display': 'flex', 'justifyContent': 'center' }}>
-        <Form style={{ width: "70%" }} onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label className="text-center">Email address</Form.Label>
-            <Form.Control
-              type="email"
-              id="email"
-              value={loginDetails.email}
-              onChange={(e) => handleChange(e, 'email')}
-              required
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="password">
-            <Form.Label>Password</Form.Label>
-            <div id="loginPassField">
+    <>
+      <div className="head-container">
+        <h3>Grappler - RBAC And Hierarchies</h3>
+      </div>
+      <div className="formParent">
+        <Container className="formParent-container" style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+          <Form style={{ width: "70%" }} onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label className="text-center">Email address</Form.Label>
               <Form.Control
-                type={showOldPassword ? 'text' : 'password'}
-                id="password"
-                value={loginDetails.password}
-                onChange={(e) => handleChange(e, 'password')}
+                type="email"
+                id="email"
+                value={loginDetails.email}
+                onChange={(e) => handleChange(e, 'email')}
+                placeholder="Enter Email"
                 required
               />
-              <Button
-                variant="outline-secondary"
-                onClick={() => setShowOldPassword(!showOldPassword)}
-              >
-                <FontAwesomeIcon icon={showOldPassword ? faEye : faEyeSlash} />
-              </Button>
-            </div>
-          </Form.Group>
-          <Button
-            variant="danger"
-            type="submit"
-            style={{ margin: "20px" }}
-            onClick={loginForm}
-          >
-            Login
-          </Button>
-          <button className="btn btn-secondary" onClick={openForgotPasswordModal}>
-            Forgot Password
-          </button>
-          <Modal show={isForgotPasswordModalOpen} onHide={closeForgotPasswordModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>Forgot Password</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <form>
-                <div>
-                  <label htmlFor="email">Enter Email: </label> &nbsp; &nbsp;
-                  <input
-                    type="email"
-                    id="email"
-                    value={emailDetails.email}
-                    onChange={(e) => handleemailDetailsChange(e, 'email')}
-                    placeholder="Enter your email"
-                    aria-required="true"
-                    required
-                  />
-                  {isEmailEmpty && <p style={{ color: 'red' }}>Please input your email!</p>}
-                </div>
-              </form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={closeForgotPasswordModal}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleFormSubmitForEmail}>
-                Submit
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </Form>
-      </Container>
-    </div>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Password</Form.Label>
+              <div id="loginPassField">
+                <Form.Control
+                  type={showOldPassword ? 'text' : 'password'}
+                  id="password"
+                  value={loginDetails.password}
+                  onChange={(e) => handleChange(e, 'password')}
+                  style={{ borderTopRightRadius: '0px', borderBottomRightRadius: '0px' }}
+                  placeholder="Enter Password"
+                  required
+                />
+                <Button
+                  variant="outline-secondary"
+                  style={{ borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px' }}
+                  onClick={() => setShowOldPassword(!showOldPassword)}
+                >
+                  <FontAwesomeIcon icon={showOldPassword ? faEye : faEyeSlash} />
+                </Button>
+              </div>
+            </Form.Group>
+            <Button
+              variant="danger"
+              type="submit"
+              style={{ margin: "20px" }}
+              onClick={loginForm}
+            >
+              Login
+            </Button>
+            <button className="btn btn-secondary" onClick={openForgotPasswordModal}>
+              Forgot Password
+            </button>
+            <Modal show={isForgotPasswordModalOpen} onHide={closeForgotPasswordModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>Forgot Password</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <form>
+                  <div>
+                    <label htmlFor="email">Enter Email: </label> &nbsp; &nbsp;
+                    <input
+                      type="email"
+                      id="email"
+                      value={emailDetails.email}
+                      onChange={(e) => handleemailDetailsChange(e, 'email')}
+                      placeholder="Enter your email"
+                      aria-required="true"
+                      required
+                    />
+                    {isEmailEmpty && <p style={{ color: 'red' }}>Please input your email!</p>}
+                  </div>
+                </form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={closeForgotPasswordModal}>
+                  Close
+                </Button>
+                <Button variant="primary" onClick={handleFormSubmitForEmail}>
+                  Submit
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </Form>
+        </Container>
+      </div>
+    </>
   )
 }
 export default Login

@@ -25,6 +25,7 @@ import UserProjects from "./Pages/UserProjects";
 import UserTeams from "./Pages/UserTeams";
 import AdminDashboard from "./Pages/AdminDashboard";
 import Errors from "./Pages/Error";
+import NotificationComponent from "./Pages/Notification";
 function App() {
 
   return (
@@ -37,6 +38,8 @@ function App() {
               element={<Navigate to="/login" />}
             />
             <Route path="/login" element={<Login />} />
+            <Route path="/notification" element={<NotificationComponent />} />
+
             <Route path="/admin" element={<PrivateRoute allowedRoles="ROLE_ADMIN" />} >
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="hierarchy" element={<Hierachy />} />

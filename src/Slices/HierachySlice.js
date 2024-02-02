@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
+import { toast } from "react-toastify";
 const initialState = {
     hierarchy: [],
     isLoadingHeirarchy: false,
     hierarchyError: null,
 }
+
+const notify = (msg) => toast(msg);
+
 export const getHeirarchyData = () =>{
     return async(dispatch) =>{
         try {
@@ -18,6 +22,25 @@ export const getHeirarchyData = () =>{
         }
     }
 }
+
+export const updateHierarchy = (updateRequest) =>{
+    return async(dispatch) =>{
+        try {
+            console.log("Inside update ", updateRequest);
+            dispatch(fetchingHierarchyRequest());
+            const response = await axios.post(`http://localhost:8080/hierarchy/update-reporting-hierarchy`, updateRequest);
+            notify(response.data.message);
+            dispatch(updateSuccess());
+        } catch (error) {
+            if(error.response)
+            {
+                notify(error.response.data.message);
+            }
+          dispatch(fetchingHierarchyFailure(error));
+        }
+    }
+}
+
 export const getHeirarchyIdData = (index) =>{
     return async(dispatch) =>{
         try {
@@ -48,11 +71,15 @@ const heirarchySlice = createSlice({
             state.hierarchy = [];
             state.isLoadingHeirarchy = false;
             state.hierarchyError = action.payload;
+        },
+        updateSuccess : (state, action) =>{
+            state.isLoadingHeirarchy = false;
+            state.hierarchyError = null;
         }
     }
 })
 export const {
-    fetchingHierarchyRequest, fetchingHierarchySuccess, fetchingHierarchyFailure
+    fetchingHierarchyRequest, fetchingHierarchySuccess, fetchingHierarchyFailure, updateSuccess
 } = heirarchySlice.actions;
 export default heirarchySlice.reducer;
   
