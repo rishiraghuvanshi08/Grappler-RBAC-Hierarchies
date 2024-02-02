@@ -8,13 +8,30 @@ import Form from "react-bootstrap/Form";
 import { getTeamMemberData, addTeamMemberData, deleteTeamMemberData } from '../Slices/TeamMemberSlice';
 import { getUsersData } from '../Slices/UserSlices';
 import Swal from 'sweetalert2';
+import Select from 'react-select';
+import { notify } from '../Components/Toastify';
+
 const TeamMember = () => {
   const { teamMember } = useSelector((state) => state.teaMemberList);
+  const { users, isLoading, error } = useSelector((state) => ({
+    users: Array.isArray(state.userList.users) ? state.userList.users : [],
+    isLoading: state.userList.isLoading,
+    error: state.userList.error,
+  }));
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  const userOptions = users
+    .filter(user => !teamMember.some(teamUser => teamUser.id === user.id))
+    .map((user) => ({
+      value: user.id,
+      label: user.name,
+    }));
+
   useEffect(() => {
     dispatch(getTeamMemberData(id));
-    dispatch(getUsersData());
+    dispatch(getUsersData(false));
   }, [])
 
   const [uId, setuId] = useState();
@@ -23,10 +40,21 @@ const TeamMember = () => {
 
   const teamId = useParams();
 
-  const addUserToTeam = (uid) => {
-    dispatch(addTeamMemberData(id, uId))
-    handleClose();
-  }
+  const addUserToTeam = () => {
+    if (selectedUsers.length > 0) {
+      dispatch(addTeamMemberData(id, selectedUsers))
+        .then(() => {
+          notify("Team member(s) added successfully");
+          handleClose();
+        })
+        .catch((error) => {
+          notify("Error adding team member");
+        });
+    } else {
+      notify("Please Select Members");
+    }
+  };
+
   const deleteTeam = (teamId, userId) => {
     Swal.fire({
       title: 'Are you sure?',
@@ -43,15 +71,14 @@ const TeamMember = () => {
     })
   };
 
-  // const updatePost = (index, description, id) => {
-  //   dispatch(updatePostData(index, description, id));
-  //   handleClose();
-  // }
-
-  // const handleEditClick = (item) => {
-  //   setpId(item.id);
-  //   setShow(true);
-  // };
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      border: "1px solid #ced4da",
+      borderRadius: "4px",
+      width: "100%",
+    }),
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -103,20 +130,23 @@ const TeamMember = () => {
           <Modal.Title>Edit Form</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form style={{ width: "40%" }} onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="id">
-              <Form.Label>UserId</Form.Label>
-              <Form.Control
-                type="Number"
-                placeholder="Enter UserId"
-                onChange={(e) => setuId(e.target.value)}
+          <Form style={{ width: '40%' }} onSubmit={handleSubmit}>
+
+            <Form.Group className="mb-3" controlId="userDropdown">
+              <Form.Label>User</Form.Label>
+              <Select
+                styles={customStyles}
+                isMulti
+                value={selectedUsers.map((userId) => userOptions.find((user) => user.value === userId))}
+                onChange={(selected) => setSelectedUsers(selected.map((user) => user.value))}
+                options={userOptions}
               />
             </Form.Group>
             <Button
               variant="primary"
               type="submit"
-              style={{ margin: "20px" }}
-              onClick={() => addUserToTeam(uId)}
+              style={{ margin: '20px' }}
+              onClick={() => addUserToTeam()}
             >
               Save Changes
             </Button>

@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { API_BASE_URL } from '../Authentication';
 export const sendOtp = (email) => {
     return async (dispatch) => {
         try {
             dispatch(loading());
-            const response = await axios.post("https://grappler-backend-rest-api-production.up.railway.app/forgot-password/send-Password", email);
+            const response = await axios.post(`${API_BASE_URL}/forgot-password/send-Password`, email);
             dispatch(getOtpSuccess(response.data));
             return response.data;
         }

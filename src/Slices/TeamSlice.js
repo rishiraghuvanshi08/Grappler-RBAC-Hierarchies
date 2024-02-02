@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import { notify } from "../Components/Toastify";
+import { API_BASE_URL } from "../Authentication";
 const initialState = {
     teams: [],
     isLoadingTeam: false,
@@ -11,7 +12,7 @@ export const getUserTeamData = (userId) =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamRequest());
-          const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/users/teams/${userId}`);
+          const response = await axios.get(`${API_BASE_URL}/users/teams/${userId}`);
           dispatch(fetchingTeamSuccess(response.data.data));
         } catch (error) {
           dispatch(fetchingTeamFailure(error));
@@ -24,7 +25,7 @@ export const getTeamData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamRequest());
-          const response = await axios.get('https://grappler-backend-rest-api-production.up.railway.app/teams/');
+          const response = await axios.get(`${API_BASE_URL}/teams/`);
           const data = response.data;
         //   console.log("data here", data);
           dispatch(fetchingTeamSuccess(data));
@@ -37,7 +38,7 @@ export const updateTeamData = (id, name) =>{
     return async(dispatch) =>{
         try {
             let details = { name };
-            const response = await axios.put(`https://grappler-backend-rest-api-production.up.railway.app/teams/${id}`, details);
+            const response = await axios.put(`${API_BASE_URL}/teams/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingTeam({ id: id, details: details }));
             notify(response.data.message);
@@ -54,7 +55,7 @@ export const addTeamData = (teamData) =>{
      console.log( "Team data in add team ",teamData)
     return async(dispatch) =>{
         try {
-            const response= await axios.post('https://grappler-backend-rest-api-production.up.railway.app/teams/', teamData);
+            const response= await axios.post(`${API_BASE_URL}/teams/`, teamData);
             console.log("add team ",response.data.data);
             teamData.id=response.data.data
             dispatch(addingTeam(teamData));

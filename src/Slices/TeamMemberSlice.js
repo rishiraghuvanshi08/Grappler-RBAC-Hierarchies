@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import Swal from "sweetalert2";
+import { API_BASE_URL } from "../Authentication";
+import { toast } from "react-toastify";
 // import { useSelector } from "react-redux";
 const initialState = {
     teamMember: [],
@@ -11,7 +13,7 @@ export const getTeamMemberData = (teamId) =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamMemberRequest());
-          const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/team-members/${teamId}`);
+          const response = await axios.get(`${API_BASE_URL}/team-members/${teamId}`);
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingTeamMemberSuccess(data));
@@ -24,7 +26,7 @@ export const deleteTeamMemberData = (teamId, userId) =>{
     return async(dispatch) =>{
         try {
             console.log(teamId, userId, "rishiii");
-            const response = await axios.delete(`https://grappler-backend-rest-api-production.up.railway.app/team-members/${teamId.id}/delete-member/${userId}`);
+            const response = await axios.delete(`${API_BASE_URL}/team-members/${teamId.id}/delete-member/${userId}`);
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheTeamMember(userId))
 
@@ -43,7 +45,7 @@ export const updateTeamMemberData = (id, name) =>{
     return async(dispatch) =>{
         try {
             let details = { name };
-            const response = await axios.put(`https://grappler-backend-rest-api-production.up.railway.app/projects/${id}`, details);
+            const response = await axios.put(`${API_BASE_URL}/projects/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingTeamMember({ id: id, details: details }));
           } catch (error) {
@@ -51,17 +53,17 @@ export const updateTeamMemberData = (id, name) =>{
           }
     }
 }
-export const addTeamMemberData = (teamId, userId) =>{
+const notify = (msg) => toast(msg);
+export const addTeamMemberData = (teamId, userIds) =>{
+    console.log("team id and user id ", teamId,userIds);
     return async(dispatch, getState) =>{
         try {
-            await axios.post(`https://grappler-backend-rest-api-production.up.railway.app/team-members/${teamId}/add-new-member/${userId}`);
-            const store = getState().userList;
-            console.log("HERE I AM USING ",store);
-            dispatch(addingTeamMember({store, userId}));
+            await axios.post(`${API_BASE_URL}/team-members/${teamId}/add-new-members`, userIds);
+            const store = getState().userList;   
+            dispatch(addingTeamMember({store, userIds}));
           } catch (error) {
             if (error.response) {
-                // const status = error.response.status;
-                alert(error.response.data.message);
+                notify(error.response.data.message);
             }
             console.error('Error storing data:', error);
           }
@@ -95,10 +97,11 @@ const teamSlice = createSlice({
                 error: action.payload,
             };
         },
-        addingTeamMember : (state, action) =>{
-            const updatedItems = action.payload.store.users.filter((item) => item.id == action.payload.userId);
+        addingTeamMember: (state, action) => {
+            const { store, userIds } = action.payload;
             let teamMember = [...state.teamMember];
-            teamMember.push(updatedItems[0]);
+            const newMembers = store.users.filter(user => userIds.includes(user.id));
+            teamMember = [...teamMember, ...newMembers];
             state.teamMember = teamMember;
         },
         deletingTheTeamMember : (state, action) =>{

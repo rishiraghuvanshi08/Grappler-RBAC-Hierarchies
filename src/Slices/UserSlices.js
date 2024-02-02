@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import { notify } from "../Components/Toastify";
 import Swal from "sweetalert2";
+import { API_BASE_URL } from "../Authentication";
 const initialState = {
     users: [],
     isLoading: false,
@@ -11,7 +12,7 @@ export const getUsersData = () => {
     return async (dispatch) => {
         try {
             dispatch(fetchingDataRequest());
-            const response = await axios.get('https://grappler-backend-rest-api-production.up.railway.app/users/');
+            const response = await axios.get(`${API_BASE_URL}/users/`);
             const data = response.data;
             dispatch(fetchingDataSuccess(data));
             return data;
@@ -23,7 +24,7 @@ export const getUsersData = () => {
 export const deleteUserData = (index) => {
     return async (dispatch) => {
         try {
-            const response = await axios.delete(`https://grappler-backend-rest-api-production.up.railway.app/users/${index}`);
+            const response = await axios.delete(`${API_BASE_URL}/users/${index}`);
             dispatch(deletingTheUser(index))
             Swal.fire(
                 'Deleted!',
@@ -42,7 +43,7 @@ export const deleteUserData = (index) => {
 export const addUserData = (user) => {
     return async (dispatch) => {
         try {
-            const response = await axios.post('https://grappler-backend-rest-api-production.up.railway.app/users/', user);
+            const response = await axios.post(`${API_BASE_URL}/users/`, user);
             let newUser = {
                 id: response.data.data,
                 name: user.name,
@@ -63,7 +64,7 @@ export const updateUserData = (id, name, email, designation) => {
     return async (dispatch) => {
         try {
             let details = { name, email, designation };
-            const response = await axios.put(`https://grappler-backend-rest-api-production.up.railway.app/users/${id}`, details);
+            const response = await axios.put(`${API_BASE_URL}/users/${id}`, details);
             // console.log('Resource updated successfully.', response.data);
             dispatch(updatingUser({ id: id, details: details }));
             notify(response.data.message);
@@ -80,7 +81,7 @@ export const updateUserIdData = (uid, name, email, designation) => {
     return async (dispatch) => {
         try {
             let details = { name, email, designation };
-            const response = await axios.put(`https://grappler-backend-rest-api-production.up.railway.app/users/${uid}`, details);
+            const response = await axios.put(`${API_BASE_URL}/users/${uid}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingUserbyId({ id: uid, details: details }));
             notify(response.data.message);
