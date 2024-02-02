@@ -274,7 +274,7 @@ const AdminDashboard = () => {
                             <MDBCol md="6">
                                 <MDBCard className="mb-4 mb-md-0">
                                     <MDBCardBody>
-                                        <MDBCardText className="mb-4">Total Projects In Innogent</MDBCardText>
+                                        <MDBCardText className="mb-4">Total Projects In Company</MDBCardText>
                                         <MDBCardText className="mb-1" style={{ fontSize: '20px' }}><strong>{totalProjects}</strong></MDBCardText>
                                     </MDBCardBody>
                                 </MDBCard>
@@ -282,7 +282,7 @@ const AdminDashboard = () => {
                             <MDBCol md="6">
                                 <MDBCard className="mb-4 mb-md-0">
                                     <MDBCardBody>
-                                        <MDBCardText className="mb-4">Total Teams In Innogent</MDBCardText>
+                                        <MDBCardText className="mb-4">Total Teams In Company</MDBCardText>
                                         <MDBCardText className="mb-1" style={{ fontSize: '20px' }}><strong>{totalTeams}</strong></MDBCardText>
                                     </MDBCardBody>
                                 </MDBCard>
