@@ -12,7 +12,7 @@ export const getUsersDataId = (email) => {
     return async (dispatch) => {
         try {
             dispatch(fetchingDataRequest());
-            const response = await axios.get(`http://localhost:8080/users?email=${email}`);
+            const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/users?email=${email}`);
             dispatch(fetchingDataIDSuccess(response.data));
             return response.data.id;
         } catch (error) {

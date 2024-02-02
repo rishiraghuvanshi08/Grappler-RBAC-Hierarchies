@@ -11,7 +11,7 @@ export const getUserTeamData = (userId) =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamRequest());
-          const response = await axios.get(`http://localhost:8080/users/teams/${userId}`);
+          const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/users/teams/${userId}`);
           dispatch(fetchingTeamSuccess(response.data.data));
         } catch (error) {
           dispatch(fetchingTeamFailure(error));
@@ -24,7 +24,7 @@ export const getTeamData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamRequest());
-          const response = await axios.get('http://localhost:8080/teams/');
+          const response = await axios.get('https://grappler-backend-rest-api-production.up.railway.app/teams/');
           const data = response.data;
         //   console.log("data here", data);
           dispatch(fetchingTeamSuccess(data));
@@ -37,7 +37,7 @@ export const updateTeamData = (id, name) =>{
     return async(dispatch) =>{
         try {
             let details = { name };
-            const response = await axios.put(`http://localhost:8080/teams/${id}`, details);
+            const response = await axios.put(`https://grappler-backend-rest-api-production.up.railway.app/teams/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingTeam({ id: id, details: details }));
             notify(response.data.message);
@@ -54,7 +54,7 @@ export const addTeamData = (teamData) =>{
      console.log( "Team data in add team ",teamData)
     return async(dispatch) =>{
         try {
-            const response= await axios.post('http://localhost:8080/teams/', teamData);
+            const response= await axios.post('https://grappler-backend-rest-api-production.up.railway.app/teams/', teamData);
             console.log("add team ",response.data.data);
             teamData.id=response.data.data
             dispatch(addingTeam(teamData));

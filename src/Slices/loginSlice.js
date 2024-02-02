@@ -5,7 +5,7 @@ export const getLoginStatus = ( loginDetails ) => {
     return async (dispatch) => {
         try {
             dispatch(loading());
-            const response = await axios.post("http://localhost:8080/auth/login", loginDetails);
+            const response = await axios.post("https://grappler-backend-rest-api-production.up.railway.app/auth/login", loginDetails);
             if(response.status === 200) {
                 dispatch(getAuthenticationFulfiled(response.data));
                 return response.data;

@@ -13,7 +13,7 @@ export const getHeirarchyData = () =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingHierarchyRequest());
-          const response = await axios.get('http://localhost:8080/hierarchy/reporting');
+          const response = await axios.get('https://grappler-backend-rest-api-production.up.railway.app/hierarchy/reporting');
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingHierarchySuccess(data));
@@ -28,7 +28,7 @@ export const updateHierarchy = (updateRequest) =>{
         try {
             console.log("Inside update ", updateRequest);
             dispatch(fetchingHierarchyRequest());
-            const response = await axios.post(`http://localhost:8080/hierarchy/update-reporting-hierarchy`, updateRequest);
+            const response = await axios.post(`https://grappler-backend-rest-api-production.up.railway.app/hierarchy/update-reporting-hierarchy`, updateRequest);
             notify(response.data.message);
             dispatch(updateSuccess());
         } catch (error) {
@@ -45,7 +45,7 @@ export const getHeirarchyIdData = (index) =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingHierarchyRequest());
-          const response = await axios.get(`http://localhost:8080/hierarchy/reporting/${index}`);
+          const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/hierarchy/reporting/${index}`);
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingHierarchySuccess(data));

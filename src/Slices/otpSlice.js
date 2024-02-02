@@ -4,7 +4,7 @@ export const sendOtp = (email) => {
     return async (dispatch) => {
         try {
             dispatch(loading());
-            const response = await axios.post("http://localhost:8080/forgot-password/send-Password", email);
+            const response = await axios.post("https://grappler-backend-rest-api-production.up.railway.app/forgot-password/send-Password", email);
             dispatch(getOtpSuccess(response.data));
             return response.data;
         }

@@ -11,7 +11,7 @@ export const getUserProjectsData = (userId) => {
     return async (dispatch) => {
         try {
             dispatch(fetchingDataRequest());
-            const response = await axios.get(`http://localhost:8080/users/project/${userId}`);
+            const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/users/project/${userId}`);
             const data = response.data.data;
             //   console.log("data here", data);
             dispatch(fetchingDataSuccess(data));
@@ -28,7 +28,7 @@ export const getProjectData = () => {
     return async (dispatch) => {
         try {
             dispatch(fetchingDataRequest());
-            const response = await axios.get('http://localhost:8080/projects/');
+            const response = await axios.get('https://grappler-backend-rest-api-production.up.railway.app/projects/');
             const data = response.data;
             //   console.log("data here", data);
             dispatch(fetchingDataSuccess(data));
@@ -43,7 +43,7 @@ export const getProjectData = () => {
 export const deleteProjectData = (index) => {
     return async (dispatch) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/projects/${index}`);
+            const response = await axios.delete(`https://grappler-backend-rest-api-production.up.railway.app/projects/${index}`);
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheProject(index))
             Swal.fire(
@@ -62,7 +62,7 @@ export const deleteProjectData = (index) => {
 export const deleteProjectTeamData = (projectId, teamId) => {
     return async (dispatch) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/projects/${projectId}/teams/${teamId}`);
+            const response = await axios.delete(`https://grappler-backend-rest-api-production.up.railway.app/projects/${projectId}/teams/${teamId}`);
             const object = {
                 pId: projectId,
                 tId: teamId,
@@ -85,7 +85,7 @@ export const updateProjectData = (id, name) => {
     return async (dispatch) => {
         try {
             let details = { name };
-            const response = await axios.put(`http://localhost:8080/projects/${id}`, details);
+            const response = await axios.put(`https://grappler-backend-rest-api-production.up.railway.app/projects/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingProject({ id: id, details: details }));
             notify(response.data.message);
@@ -101,7 +101,7 @@ export const addProjectData = (project) => {
     // console.log( user)
     return async (dispatch) => {
         try {
-            const response = await axios.post('http://localhost:8080/projects/', project);
+            const response = await axios.post('https://grappler-backend-rest-api-production.up.railway.app/projects/', project);
             const newProject = {
                 id: response.data.data,
                 name: project.name,
@@ -122,7 +122,7 @@ export const addProjectData = (project) => {
 export const addProjecTeamData = (projectId, teamIds) => {
     return async (dispatch) => {
         try {
-            const response = await axios.post(`http://localhost:8080/projects/${projectId}/teams`, teamIds);
+            const response = await axios.post(`https://grappler-backend-rest-api-production.up.railway.app/projects/${projectId}/teams`, teamIds);
             const object = {
                 pId: projectId,
                 team: response.data.data,

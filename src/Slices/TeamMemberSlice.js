@@ -11,7 +11,7 @@ export const getTeamMemberData = (teamId) =>{
     return async(dispatch) =>{
         try {
           dispatch(fetchingTeamMemberRequest());
-          const response = await axios.get(`http://localhost:8080/team-members/${teamId}`);
+          const response = await axios.get(`https://grappler-backend-rest-api-production.up.railway.app/team-members/${teamId}`);
           const data = response.data;
           console.log("data here", data);
           dispatch(fetchingTeamMemberSuccess(data));
@@ -24,7 +24,7 @@ export const deleteTeamMemberData = (teamId, userId) =>{
     return async(dispatch) =>{
         try {
             console.log(teamId, userId, "rishiii");
-            const response = await axios.delete(`http://localhost:8080/team-members/${teamId.id}/delete-member/${userId}`);
+            const response = await axios.delete(`https://grappler-backend-rest-api-production.up.railway.app/team-members/${teamId.id}/delete-member/${userId}`);
             console.log('Resource deleted successfully.', response.data);
             dispatch(deletingTheTeamMember(userId))
 
@@ -43,7 +43,7 @@ export const updateTeamMemberData = (id, name) =>{
     return async(dispatch) =>{
         try {
             let details = { name };
-            const response = await axios.put(`http://localhost:8080/projects/${id}`, details);
+            const response = await axios.put(`https://grappler-backend-rest-api-production.up.railway.app/projects/${id}`, details);
             console.log('Resource updated successfully.', response.data);
             dispatch(updatingTeamMember({ id: id, details: details }));
           } catch (error) {
@@ -54,7 +54,7 @@ export const updateTeamMemberData = (id, name) =>{
 export const addTeamMemberData = (teamId, userId) =>{
     return async(dispatch, getState) =>{
         try {
-            await axios.post(`http://localhost:8080/team-members/${teamId}/add-new-member/${userId}`);
+            await axios.post(`https://grappler-backend-rest-api-production.up.railway.app/team-members/${teamId}/add-new-member/${userId}`);
             const store = getState().userList;
             console.log("HERE I AM USING ",store);
             dispatch(addingTeamMember({store, userId}));

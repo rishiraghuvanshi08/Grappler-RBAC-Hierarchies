@@ -5,7 +5,7 @@ export const passwordChange = (passwords) => {
     return async (dispatch) => {
         try {
             dispatch(loading());
-            const response = await axios.post("http://localhost:8080/users/change-password", passwords);
+            const response = await axios.post("https://grappler-backend-rest-api-production.up.railway.app/users/change-password", passwords);
             dispatch(getPasswordSuccess(response.data));
             return response.data;
         }
